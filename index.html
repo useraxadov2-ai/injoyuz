@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Plastasion Club</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js">
+    <title>Injoygame</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
     </script>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <style>
-        /* ===== GLOBAL ===== */
+        /* ── RESET & ROOT ── */
         * {
             margin: 0;
             padding: 0;
@@ -18,31 +19,32 @@
         }
         :root {
             --accent: #c8f65a;
-            --bg: #0a0a12;
-            --surface: #12121e;
-            --card: #1a1a2a;
-            --card2: #22223a;
+            --accent-dark: #a8d84a;
+            --bg: #0b0b14;
+            --surface: #13131f;
+            --card: #1c1c2e;
+            --card-hover: #26263a;
             --text: #f0f0f8;
             --muted: #7a7a9a;
             --border: rgba(255, 255, 255, 0.06);
             --shadow: rgba(0, 0, 0, 0.5);
-            --font: 'Montserrat', sans-serif;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --font: 'Inter', -apple-system, sans-serif;
             --red: #ef4444;
             --green: #22c55e;
-            --warning: #f59e0b;
-            --click-blue: #00b9f2;
             --gold: #fbbf24;
-            --radius-sm: 10px;
-            --radius-md: 16px;
+            --blue: #00b9f2;
+            --header-h: 58px;
+            --nav-h: 70px;
             --radius-lg: 24px;
-            --header-h: 60px;
-            --nav-h: 76px;
+            --warning: #f59e0b;
         }
         .light {
             --bg: #f4f4f0;
             --surface: #eaeae4;
             --card: #ffffff;
-            --card2: #f0f0ec;
+            --card-hover: #f0f0ec;
             --text: #111118;
             --muted: #888890;
             --border: rgba(0, 0, 0, 0.07);
@@ -61,10 +63,7 @@
             -webkit-font-smoothing: antialiased;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
-
-        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 3px;
             height: 3px;
@@ -77,7 +76,7 @@
             border-radius: 99px;
         }
 
-        /* ===== PRELOADER ===== */
+        /* ── PRELOADER ── */
         #preloader {
             position: fixed;
             inset: 0;
@@ -87,27 +86,26 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            transition: opacity .5s;
+            gap: 16px;
+            transition: opacity .4s;
         }
         #preloader.hidden {
             opacity: 0;
             pointer-events: none;
         }
         .pre-logo {
-            width: 100px;
-            height: 100px;
-            border-radius: 24px;
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
             background: var(--surface);
+            border: 2px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 28px;
             font-weight: 900;
             color: var(--accent);
             font-family: var(--font);
-            border: 2px solid var(--border);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         }
         .pre-logo span {
             color: var(--text);
@@ -118,7 +116,6 @@
             background: var(--border);
             border-radius: 99px;
             overflow: hidden;
-            margin-top: 4px;
         }
         .pre-fill {
             height: 100%;
@@ -134,19 +131,23 @@
                 width: 100%;
             }
         }
+        .pre-sub {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-        /* ===== HEADER ===== */
+        /* ── HEADER ── */
         header {
             flex-shrink: 0;
             height: var(--header-h);
-            padding: 0 16px;
+            padding: 0 14px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
             z-index: 100;
             position: relative;
         }
@@ -172,7 +173,7 @@
         }
         .logo-text {
             font-weight: 800;
-            font-size: 17px;
+            font-size: 16px;
             letter-spacing: -.3px;
         }
         .logo-text span {
@@ -180,7 +181,7 @@
         }
         .hdr-right {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
         .hdr-btn {
@@ -228,16 +229,23 @@
             object-fit: cover;
             cursor: pointer;
             flex-shrink: 0;
+            background: var(--card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        /* ===== USER MENU ===== */
+        /* ── USER MENU ── */
         .user-menu {
             position: absolute;
-            top: calc(var(--header-h) + 6px);
-            right: 12px;
+            top: calc(var(--header-h) + 4px);
+            right: 10px;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius);
             padding: 14px;
             min-width: 200px;
             display: none;
@@ -246,7 +254,7 @@
         }
         .user-menu.show {
             display: block;
-            animation: fadeUp .25s ease;
+            animation: fadeUp .2s ease;
         }
         .user-menu .user-info {
             display: flex;
@@ -255,11 +263,18 @@
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
         }
-        .user-menu .user-info img {
+        .user-menu .user-info .avatar {
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            object-fit: cover;
+            background: var(--accent);
+            color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
         }
         .user-menu .user-info .name {
             font-weight: 700;
@@ -295,14 +310,14 @@
             color: #ff6b6b;
         }
 
-        /* ===== WELCOME BANNER ===== */
+        /* ── WELCOME ── */
         #welcomeBanner {
             display: flex;
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            margin: 8px 14px 0;
+            padding: 10px 14px;
+            margin: 8px 12px 0;
             font-size: 13px;
             font-weight: 600;
             align-items: center;
@@ -318,17 +333,17 @@
         #welcomeBanner .badge-new {
             background: var(--accent);
             color: #111;
-            padding: 3px 12px;
+            padding: 2px 12px;
             border-radius: 99px;
             font-size: 10px;
             font-weight: 700;
         }
 
-        /* ===== MAIN TABS ===== */
+        /* ── TABS ── */
         .main-tabs {
             display: flex;
             gap: 2px;
-            padding: 8px 14px 0;
+            padding: 6px 12px 0;
             border-bottom: 1px solid var(--border);
             background: var(--bg);
             flex-shrink: 0;
@@ -337,8 +352,8 @@
             z-index: 50;
         }
         .main-tab {
-            padding: 8px 16px;
-            border-radius: 10px 10px 0 0;
+            padding: 8px 14px;
+            border-radius: 8px 8px 0 0;
             font-weight: 700;
             font-size: 12px;
             cursor: pointer;
@@ -353,15 +368,42 @@
             border-right: none;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
-        .main-tab .tab-emoji {
-            font-size: 16px;
+        .mat-icon {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 20px;
             line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            vertical-align: middle;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+            -webkit-font-feature-settings: 'liga';
+        }
+        .main-tab .mat-icon {
+            font-size: 16px;
+        }
+        .mat-icon svg {
+            width: 1em;
+            height: 1em;
+            display: block;
+            vertical-align: middle;
         }
         .main-tab.active {
             color: var(--accent);
             border-bottom-color: var(--accent);
+        }
+        .main-tab:hover {
+            color: var(--text);
         }
         .main-tab .tab-badge {
             position: absolute;
@@ -382,7 +424,7 @@
             display: flex;
         }
 
-        /* ===== SCROLLABLE CONTENT ===== */
+        /* ── SCROLL CONTENT ── */
         .scroll-content {
             flex: 1;
             overflow-y: auto;
@@ -391,20 +433,18 @@
             padding-bottom: calc(var(--nav-h) + 10px);
             scroll-behavior: smooth;
         }
-        .scroll-content::-webkit-scrollbar {
-            width: 3px;
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
         }
-        .scroll-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .scroll-content::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 99px;
+        .page.show {
+            display: block;
         }
 
-        /* ===== SEARCH ===== */
+        /* ── SEARCH ── */
         .search-wrap {
-            padding: 10px 14px 0;
+            padding: 10px 12px 0;
         }
         .sbox {
             display: flex;
@@ -413,10 +453,13 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            padding: 8px 14px;
+            padding: 8px 12px;
             transition: .2s;
         }
-        .sbox i {
+        .sbox:focus-within {
+            border-color: var(--accent);
+        }
+        .sbox .mat-icon {
             color: var(--muted);
             font-size: 18px;
             flex-shrink: 0;
@@ -435,9 +478,9 @@
             color: var(--muted);
         }
 
-        /* ===== CATEGORY CHIPS ===== */
+        /* ── CATEGORY CHIPS ── */
         .cats-wrap {
-            padding: 8px 14px 0;
+            padding: 8px 12px 0;
             overflow-x: auto;
             display: flex;
             gap: 6px;
@@ -448,7 +491,7 @@
             display: none;
         }
         .cat {
-            padding: 6px 16px;
+            padding: 6px 14px;
             border-radius: 99px;
             font-size: 11px;
             font-weight: 600;
@@ -464,9 +507,8 @@
             align-items: center;
             gap: 4px;
         }
-        .cat .cat-emoji {
+        .cat .mat-icon {
             font-size: 14px;
-            line-height: 1;
         }
         .cat.active {
             background: var(--accent);
@@ -477,12 +519,12 @@
             transform: scale(0.94);
         }
 
-        /* ===== GRID ===== */
+        /* ── GRID ── */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 10px 10px 10px;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px;
+            padding: 10px 8px 10px;
         }
         .vcard {
             background: var(--card);
@@ -503,6 +545,52 @@
             display: block;
             background: var(--card2);
         }
+
+        /* ── 360 / VR PANORAMA MODAL ── */
+        #panoramaModal {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10050;
+            display: none;
+        }
+        #panoramaModal.show {
+            display: block;
+        }
+        #panoramaModal a-scene {
+            width: 100%;
+            height: 100%;
+        }
+        .panorama-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 10051;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, .55);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .panorama-hint {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10051;
+            background: rgba(0, 0, 0, .55);
+            color: #fff;
+            font-size: 11px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            white-space: nowrap;
+        }
         .badge-row {
             position: absolute;
             top: 6px;
@@ -516,7 +604,7 @@
         .price-badge {
             background: var(--bg);
             color: var(--text);
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 6px;
             font-weight: 800;
             font-size: 11px;
@@ -539,9 +627,14 @@
         .stock-lbl {
             font-size: 9px;
             font-weight: 600;
-            color: var(--warning);
             display: block;
             margin-bottom: 1px;
+        }
+        .stock-lbl.available {
+            color: var(--green);
+        }
+        .stock-lbl.booked {
+            color: var(--red);
         }
         .vtitle {
             font-weight: 700;
@@ -584,9 +677,8 @@
             justify-content: center;
             gap: 3px;
         }
-        .abtn .btn-emoji {
-            font-size: 12px;
-            line-height: 1;
+        .abtn .mat-icon {
+            font-size: 14px;
         }
         .abtn:active {
             transform: scale(0.92);
@@ -603,22 +695,19 @@
             background: var(--gold);
             color: #111;
         }
+        .abtn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
         .abtn:disabled {
             opacity: .4;
             cursor: not-allowed;
         }
 
-        /* ===== PAGES ===== */
-        .page {
-            display: none;
-        }
-        .page.show {
-            display: block;
-        }
-
-        /* ===== SAVAD (CART) ===== */
+        /* ── SAVAD (CART) ── */
         #savadPage {
-            padding: 10px 14px 10px;
+            padding: 10px 12px 10px;
         }
         #savadPage .page-title {
             font-weight: 800;
@@ -634,11 +723,6 @@
             border-radius: var(--radius-sm);
             padding: 10px 12px;
             margin-bottom: 8px;
-            transition: .2s;
-            cursor: pointer;
-        }
-        .cart-item:active {
-            transform: scale(0.98);
         }
         .cart-item .top {
             display: flex;
@@ -700,7 +784,7 @@
             font-weight: 900;
             color: var(--accent);
         }
-        .cart-total .btn-pay {
+        .cart-total .btn-order {
             margin-top: 8px;
             width: 100%;
             padding: 12px;
@@ -713,12 +797,8 @@
             cursor: pointer;
             font-family: var(--font);
             transition: .2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
-        .cart-total .btn-pay:active {
+        .cart-total .btn-order:active {
             transform: scale(0.97);
         }
         .cart-empty {
@@ -726,16 +806,16 @@
             padding: 40px 20px;
             color: var(--muted);
         }
-        .cart-empty i {
+        .cart-empty .mat-icon {
             font-size: 48px;
             display: block;
             margin-bottom: 12px;
             opacity: .3;
         }
 
-        /* ===== PROFILE ===== */
+        /* ── PROFILE ── */
         #profilePage {
-            padding: 10px 14px 10px;
+            padding: 10px 12px 10px;
         }
         #profilePage .page-title {
             font-weight: 800;
@@ -748,8 +828,8 @@
         .profile-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 16px;
+            border-radius: var(--radius);
+            padding: 14px;
             margin-bottom: 12px;
         }
         .profile-card .row {
@@ -769,7 +849,59 @@
             font-weight: 700;
         }
 
-        /* ===== NAV ===== */
+        /* Availability calendar */
+        .availability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .avail-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .avail-item .room {
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .avail-item .status {
+            font-size: 11px;
+            margin-top: 4px;
+            padding: 2px 8px;
+            border-radius: 99px;
+            display: inline-block;
+        }
+        .avail-item .status.free {
+            color: var(--green);
+            background: rgba(34, 197, 94, .12);
+        }
+        .avail-item .status.booked {
+            color: var(--red);
+            background: rgba(239, 68, 68, .12);
+        }
+
+        /* ── QR CODE MODAL ── */
+        .qr-modal .modal-sheet {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .qr-modal .qr-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        .qr-modal .order-id {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        /* ── NAV ── */
         .nav {
             position: fixed;
             bottom: 0;
@@ -802,12 +934,11 @@
             border: none;
             font-family: var(--font);
         }
-        .navi .nav-emoji {
-            font-size: 22px;
-            line-height: 1;
-        }
         .navi.active {
             color: var(--accent);
+        }
+        .navi .mat-icon {
+            font-size: 24px;
         }
         .navi span {
             font-size: 8px;
@@ -834,7 +965,7 @@
             display: flex;
         }
 
-        /* ===== MODAL ===== */
+        /* ── MODAL ── */
         .modal-over {
             display: none;
             position: fixed;
@@ -968,24 +1099,6 @@
             font-weight: 600;
             color: var(--muted);
         }
-        .sheet-fireplaces {
-            display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            padding: 4px 0 10px;
-            scrollbar-width: none;
-        }
-        .sheet-fireplaces::-webkit-scrollbar {
-            display: none;
-        }
-        .sheet-fireplaces img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
         .sheet-book-row {
             display: flex;
             flex-wrap: wrap;
@@ -1033,412 +1146,7 @@
             min-width: 70px;
         }
 
-        /* ===== VR BUTTON ON IMAGE ===== */
-        .vr-image-btn {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            background: rgba(0, 185, 242, 0.9);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            font-family: var(--font);
-            transition: .2s;
-            box-shadow: 0 4px 20px rgba(0, 185, 242, 0.3);
-            z-index: 5;
-        }
-        .vr-image-btn:active {
-            transform: scale(0.92);
-        }
-
-        /* ===== COMMENTS ===== */
-        .cmts-sec {
-            margin-top: 14px;
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-        }
-        .cmts-title {
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .cmt-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        .cmt-author {
-            font-weight: 700;
-            font-size: 11px;
-            color: var(--accent);
-            margin-bottom: 2px;
-        }
-        .cmt-time {
-            font-size: 9px;
-            color: var(--muted);
-            margin-left: 4px;
-            font-weight: 400;
-        }
-        .cmt-inp-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-        }
-        .cmt-inp {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 12px;
-            outline: none;
-            transition: .2s;
-        }
-        .cmt-inp:focus {
-            border-color: var(--accent);
-        }
-        .cmt-send {
-            padding: 8px 16px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            background: var(--accent);
-            color: #111;
-            font-weight: 700;
-            font-size: 12px;
-            font-family: var(--font);
-            transition: .2s;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .cmt-send:active {
-            transform: scale(0.92);
-        }
-
-        /* ===== VR OVERLAY ===== */
-        #vrOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: #000;
-        }
-        #vrOverlay.show {
-            display: block;
-            animation: fadeIn .3s ease;
-        }
-        #vrOverlay .vr-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(0, 0, 0, .7);
-            border: none;
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-        }
-        #vrOverlay a-scene {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* ===== PAYMENT ===== */
-        #paymentSystem {
-            display: none;
-            padding: 12px 14px 10px;
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        #paymentSystem .page-title {
-            font-weight: 800;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .payment-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-        .payment-card .row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 13px;
-        }
-        .payment-card .row:last-child {
-            margin-bottom: 0;
-        }
-        .pay-progress {
-            width: 100%;
-            height: 5px;
-            background: var(--surface);
-            border-radius: 99px;
-            overflow: hidden;
-            margin: 6px 0;
-        }
-        .pay-progress .fill {
-            height: 100%;
-            background: var(--accent);
-            width: 0%;
-            transition: width .5s;
-        }
-        .click-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--click-blue);
-            color: #fff;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-            font-family: var(--font);
-            font-weight: 700;
-            font-size: 14px;
-            transition: .3s;
-            box-shadow: 0 4px 20px rgba(0, 185, 242, .3);
-        }
-        .click-btn:active {
-            transform: scale(0.97);
-        }
-        .click-btn img {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            object-fit: contain;
-        }
-        .pay-close {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--surface);
-            color: var(--muted);
-            font-size: 14px;
-            cursor: pointer;
-            transition: .2s;
-            margin-top: 10px;
-            font-family: var(--font);
-        }
-        .pay-close:active {
-            transform: scale(0.97);
-        }
-        .success-box {
-            background: rgba(34, 197, 94, .1);
-            border: 2px solid var(--green);
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            color: var(--green);
-        }
-        .warning-box {
-            background: rgba(245, 158, 11, .1);
-            border: 2px solid var(--warning);
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            color: var(--warning);
-        }
-
-        /* ===== AI ===== */
-        #aiToggle {
-            position: fixed;
-            right: 12px;
-            bottom: calc(var(--nav-h) + 14px);
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: var(--accent);
-            color: #111;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            box-shadow: 0 4px 20px rgba(200, 246, 90, .3);
-            transition: .2s;
-        }
-        #aiToggle:active {
-            transform: scale(0.92);
-        }
-        #aiToggle i {
-            font-size: 24px;
-        }
-        #aiWin {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: var(--bg);
-            z-index: 4500;
-            flex-direction: column;
-            animation: slideUp .3s ease;
-        }
-        #aiWin.show {
-            display: flex;
-        }
-        .ai-header {
-            padding: 14px 16px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .ai-title {
-            font-weight: 800;
-            font-size: 17px;
-        }
-        .ai-status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            color: var(--green);
-        }
-        .ai-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: .4;
-            }
-        }
-        #aiMsgs {
-            flex: 1;
-            overflow-y: auto;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .msg {
-            max-width: 88%;
-            padding: 10px 14px;
-            border-radius: 14px;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-        .msg.bot {
-            align-self: flex-start;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-bottom-left-radius: 4px;
-        }
-        .msg.user {
-            align-self: flex-end;
-            background: var(--accent);
-            color: #111;
-            border-bottom-right-radius: 4px;
-            font-weight: 500;
-        }
-        .ai-inp-row {
-            padding: 10px 12px 18px;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        #aiInp {
-            flex: 1;
-            background: var(--card);
-            border: 1px solid var(--border);
-            padding: 10px 14px;
-            border-radius: 18px;
-            outline: none;
-            font-family: var(--font);
-            font-size: 13px;
-            color: var(--text);
-            transition: .2s;
-        }
-        #aiInp:focus {
-            border-color: var(--accent);
-        }
-        .send-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            background: var(--accent);
-            color: #111;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: .2s;
-        }
-        .send-btn:active {
-            transform: scale(0.92);
-        }
-        .send-btn i {
-            font-size: 20px;
-        }
-
-        /* ===== OFFLINE ===== */
-        #offlineBanner {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 99999;
-            background: var(--red);
-            color: #fff;
-            text-align: center;
-            padding: 8px 14px;
-            font-weight: 700;
-            font-size: 12px;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: var(--font);
-        }
-        #offlineBanner.show {
-            display: flex;
-        }
-
-        /* ===== TOAST ===== */
+        /* ── TOAST ── */
         .toast {
             position: fixed;
             bottom: calc(var(--nav-h) + 16px);
@@ -1481,12 +1189,12 @@
             }
         }
 
-        /* ===== RESPONSIVE ===== */
+        /* ── RESPONSIVE ── */
         @media(max-width:480px) {
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 8px;
-                padding: 8px 6px 8px;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 10px;
+                padding: 8px 4px 8px;
             }
             .sheet-image-main {
                 height: 160px;
@@ -1496,7 +1204,7 @@
             }
             .main-tab {
                 font-size: 11px;
-                padding: 6px 12px;
+                padding: 6px 10px;
             }
             .vtitle {
                 font-size: 11px;
@@ -1513,14 +1221,14 @@
             }
             #welcomeBanner {
                 font-size: 12px;
-                padding: 8px 14px;
-                margin: 6px 10px 0;
+                padding: 8px 12px;
+                margin: 6px 8px 0;
             }
             .search-wrap {
-                padding: 8px 10px 0;
+                padding: 8px 8px 0;
             }
             .cats-wrap {
-                padding: 6px 10px 0;
+                padding: 6px 8px 0;
             }
             .cart-item .title {
                 font-size: 12px;
@@ -1528,24 +1236,9 @@
             .cart-total .amount {
                 font-size: 18px;
             }
-            .vr-image-btn {
-                font-size: 11px;
-                padding: 6px 12px;
-                bottom: 8px;
-                right: 8px;
-            }
-            .navi .nav-emoji {
-                font-size: 20px;
-            }
         }
 
-        /* ===== UTILITY ===== */
-        .mt-1 {
-            margin-top: 4px;
-        }
-        .mt-2 {
-            margin-top: 8px;
-        }
+        /* ── UTILITY ── */
         .text-muted {
             color: var(--muted);
         }
@@ -1561,9 +1254,6 @@
         .fs-10 {
             font-size: 10px;
         }
-        .gap-1 {
-            gap: 4px;
-        }
         .flex {
             display: flex;
         }
@@ -1572,8 +1262,17 @@
             align-items: center;
             justify-content: center;
         }
+        .gap-1 {
+            gap: 4px;
+        }
+        .mt-1 {
+            margin-top: 4px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
 
-        /* ===== HIDE TABS ON SAVAD ===== */
+        /* ── HIDE TABS ON SAVAD ── */
         body.show-savad .main-tabs {
             display: none;
         }
@@ -1586,467 +1285,1562 @@
         body.show-savad #savadPage {
             padding-top: 4px;
         }
+
+        .light .vcard {
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        /* ══════════════════════════════════════════════════════════
+           CINEMATIC ENTRANCE ATMOSPHERE SYSTEM
+           Three original, rotating gaming-inspired intros:
+           GTA-style sunset city · FIFA-style stadium · PS+ Autumn
+           ══════════════════════════════════════════════════════════ */
+        #atmoIntro {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #05060c;
+            opacity: 1;
+            transition: opacity .8s ease, transform .8s ease;
+            filter: blur(0);
+            will-change: opacity, transform;
+        }
+        #atmoIntro.done {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+        #atmoIntro.gone {
+            display: none;
+        }
+        .atmo-scene {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        .atmo-layer {
+            position: absolute;
+            inset: -6%;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+        #atmoIntro.ready .atmo-layer {
+            opacity: 1;
+        }
+        .atmo-vignette {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(120% 90% at 50% 8%, transparent 55%, rgba(0, 0, 0, .55) 100%),
+                radial-gradient(120% 80% at 50% 100%, rgba(0, 0, 0, .6), transparent 60%);
+        }
+        .atmo-grain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: .05;
+            background-image: radial-gradient(rgba(255, 255, 255, .8) .5px, transparent .5px);
+            background-size: 3px 3px;
+            mix-blend-mode: overlay;
+        }
+
+        /* ── shared cinematic drift ── */
+        @keyframes atmoDrift {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1.05);
+            }
+            100% {
+                transform: translate3d(-3%, -1.5%, 0) scale(1.12);
+            }
+        }
+        @keyframes atmoRise {
+            0% {
+                transform: translateY(110vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: .9;
+            }
+            100% {
+                transform: translateY(-12vh) rotate(240deg);
+                opacity: 0;
+            }
+        }
+        @keyframes atmoLeafFall {
+            0% {
+                transform: translateY(-14vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            12% {
+                opacity: .95;
+            }
+            100% {
+                transform: translateY(112vh) translateX(var(--drift, 40px)) rotate(320deg);
+                opacity: 0;
+            }
+        }
+        @keyframes atmoSweep {
+            0% {
+                transform: translateX(-120%) skewX(-18deg);
+                opacity: 0;
+            }
+            35% {
+                opacity: .55;
+            }
+            100% {
+                transform: translateX(160%) skewX(-18deg);
+                opacity: 0;
+            }
+        }
+        @keyframes atmoPulse {
+            0%,
+            100% {
+                opacity: .55;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ═══ MODE 1 · GTA-STYLE (sunset open-world city) ═══ */
+        #atmoIntro.mode-gta .l-sky {
+            background:
+                linear-gradient(180deg,
+                    #241033 0%,
+                    #5b1f5e 24%,
+                    #b3306b 46%,
+                    #ff6a4d 68%,
+                    #ffb457 86%,
+                    #ffd98a 100%);
+            animation: atmoDrift 14s ease-in-out infinite alternate;
+        }
+        #atmoIntro.mode-gta .l-sun {
+            background:
+                radial-gradient(38% 30% at 50% 78%, rgba(255, 240, 190, .95), rgba(255, 150, 90, .5) 40%, transparent 70%);
+            mix-blend-mode: screen;
+            animation: atmoPulse 6s ease-in-out infinite;
+        }
+        #atmoIntro.mode-gta .l-skyline {
+            inset: auto -6% -6% -6%;
+            height: 46%;
+            background:
+                linear-gradient(180deg, transparent, rgba(8, 4, 16, .2) 30%, #0a0612 78%),
+                repeating-linear-gradient(90deg,
+                    #140a22 0 26px, #1c0e2e 26px 30px, #0f0819 30px 64px, #170b26 64px 70px);
+            -webkit-mask: linear-gradient(180deg, transparent 0, #000 34%);
+            mask: linear-gradient(180deg, transparent 0, #000 34%);
+            clip-path: polygon(0 42%, 5% 42%, 5% 24%, 9% 24%, 9% 42%, 15% 42%, 15% 16%, 20% 16%, 20% 42%, 27% 42%, 27% 30%, 33% 30%, 33% 42%, 40% 42%, 40% 12%, 46% 12%, 46% 42%, 53% 42%, 53% 26%, 59% 26%, 59% 42%, 66% 42%, 66% 18%, 72% 18%, 72% 42%, 79% 42%, 79% 30%, 85% 30%, 85% 42%, 92% 42%, 92% 22%, 96% 22%, 96% 42%, 100% 42%, 100% 100%, 0 100%);
+        }
+        #atmoIntro.mode-gta .l-windows {
+            inset: auto -6% -6% -6%;
+            height: 46%;
+            opacity: .5;
+            background-image: radial-gradient(rgba(255, 196, 120, .9) 1px, transparent 1.4px);
+            background-size: 14px 18px;
+            -webkit-mask: linear-gradient(180deg, transparent 60%, #000 90%);
+            mask: linear-gradient(180deg, transparent 60%, #000 90%);
+            animation: atmoPulse 5s ease-in-out infinite;
+        }
+
+        /* ═══ MODE 2 · FIFA-STYLE (stadium / pitch) ═══ */
+        #atmoIntro.mode-fifa .l-sky {
+            background:
+                radial-gradient(80% 60% at 50% -10%, #2b6b4a 0%, #103d2c 45%, #06180f 100%);
+            animation: atmoDrift 16s ease-in-out infinite alternate;
+        }
+        #atmoIntro.mode-fifa .l-floods {
+            background:
+                radial-gradient(9% 18% at 16% 6%, rgba(255, 255, 255, .9), transparent 60%),
+                radial-gradient(9% 18% at 40% 3%, rgba(255, 255, 255, .8), transparent 60%),
+                radial-gradient(9% 18% at 60% 3%, rgba(255, 255, 255, .8), transparent 60%),
+                radial-gradient(9% 18% at 84% 6%, rgba(255, 255, 255, .9), transparent 60%);
+            mix-blend-mode: screen;
+            animation: atmoPulse 4.5s ease-in-out infinite;
+        }
+        #atmoIntro.mode-fifa .l-pitch {
+            inset: auto -30% -20% -30%;
+            height: 58%;
+            transform: perspective(520px) rotateX(62deg);
+            transform-origin: center top;
+            background:
+                repeating-linear-gradient(90deg,
+                    #1f7a44 0 60px, #1a6b3b 60px 120px);
+            box-shadow: inset 0 40px 90px rgba(0, 0, 0, .5);
+        }
+        #atmoIntro.mode-fifa .l-pitch::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(6, 24, 15, .65), transparent 40%),
+                radial-gradient(60% 80% at 50% 0%, rgba(255, 255, 255, .18), transparent 55%);
+        }
+        #atmoIntro.mode-fifa .l-sweep {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+            width: 40%;
+            inset: -6% auto -6% 0;
+            animation: atmoSweep 3.6s ease-in-out .4s infinite;
+        }
+
+        /* ═══ MODE 3 · PS PLUS + AUTUMN (premium evening calm) ═══ */
+        #atmoIntro.mode-psplus .l-sky {
+            background:
+                linear-gradient(180deg, #0a1030 0%, #1a1450 40%, #2a1c4d 70%, #3a2246 100%);
+            animation: atmoDrift 18s ease-in-out infinite alternate;
+        }
+        #atmoIntro.mode-psplus .l-orbs {
+            background:
+                radial-gradient(30% 26% at 22% 30%, rgba(96, 120, 255, .5), transparent 60%),
+                radial-gradient(34% 30% at 80% 60%, rgba(150, 90, 220, .45), transparent 60%),
+                radial-gradient(26% 24% at 55% 20%, rgba(80, 200, 255, .32), transparent 60%);
+            filter: blur(6px);
+            mix-blend-mode: screen;
+            animation: atmoPulse 7s ease-in-out infinite;
+        }
+        #atmoIntro.mode-psplus .l-haze {
+            inset: auto -6% -6% -6%;
+            height: 40%;
+            background: linear-gradient(180deg, transparent, rgba(20, 16, 60, .8));
+        }
+
+        /* ── particles / leaves containers ── */
+        .atmo-particles,
+        .atmo-leaves {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .atmo-particle {
+            position: absolute;
+            bottom: -6vh;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255, 200, 140, .9);
+            box-shadow: 0 0 8px rgba(255, 190, 120, .9);
+            animation: atmoRise linear infinite;
+        }
+        #atmoIntro.mode-fifa .atmo-particle {
+            background: rgba(255, 255, 255, .95);
+            box-shadow: 0 0 8px rgba(200, 246, 90, .8);
+        }
+        #atmoIntro.mode-psplus .atmo-particle {
+            background: rgba(150, 180, 255, .9);
+            box-shadow: 0 0 10px rgba(130, 160, 255, .9);
+        }
+        .atmo-leaf {
+            position: absolute;
+            top: -14vh;
+            width: 16px;
+            height: 16px;
+            opacity: 0;
+            animation: atmoLeafFall linear infinite;
+            color: #d98a3d;
+        }
+
+        /* ── foreground content / brand reveal ── */
+        .atmo-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            padding: 24px;
+            transform: translateY(14px);
+            opacity: 0;
+            transition: opacity 1s ease .5s, transform 1s ease .5s;
+        }
+        #atmoIntro.ready .atmo-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .atmo-logo {
+            width: 78px;
+            height: 78px;
+            margin: 0 auto 18px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .18);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, .45);
+        }
+        .atmo-logo svg {
+            width: 40px;
+            height: 40px;
+        }
+        .atmo-title {
+            font-family: var(--font);
+            font-weight: 900;
+            font-size: 30px;
+            letter-spacing: -.5px;
+            color: #fff;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, .6);
+        }
+        .atmo-title span {
+            color: var(--accent);
+        }
+        #atmoIntro.mode-gta .atmo-title span {
+            color: #ffcf6a;
+        }
+        #atmoIntro.mode-psplus .atmo-title span {
+            color: #8ea2ff;
+        }
+        .atmo-tag {
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .7);
+        }
+        .atmo-bar {
+            width: 150px;
+            height: 3px;
+            margin: 22px auto 0;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, .15);
+            overflow: hidden;
+        }
+        .atmo-bar i {
+            display: block;
+            height: 100%;
+            width: 0;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #fff, var(--accent));
+        }
+        #atmoIntro.ready .atmo-bar i {
+            animation: atmoFill 3.4s ease forwards;
+        }
+        @keyframes atmoFill {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        .atmo-enter {
+            margin-top: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, .28);
+            background: rgba(255, 255, 255, .08);
+            color: #fff;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: .5px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity .5s ease, transform .5s ease, background .2s;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        #atmoIntro.ready .atmo-enter {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 1.4s;
+        }
+        .atmo-enter:hover {
+            background: rgba(255, 255, 255, .16);
+        }
+        .atmo-enter:active {
+            transform: scale(.95);
+        }
+        .atmo-enter svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .atmo-title {
+                font-size: 25px;
+            }
+            .atmo-logo {
+                width: 68px;
+                height: 68px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .atmo-layer,
+            .atmo-particle,
+            .atmo-leaf,
+            .atmo-bar i,
+            .atmo-enter {
+                animation: none !important;
+            }
+        }
+
+        /* ── FIFA-STYLE PACK OPENING (entrance) ── */
+        #packIntro {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: #05070a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity .6s ease;
+        }
+        #packIntro.gone {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #packIntro .pk-stadium {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 120%, rgba(50, 180, 110, .35), transparent 60%),
+                radial-gradient(ellipse at 20% -10%, rgba(180, 255, 120, .18), transparent 55%),
+                radial-gradient(ellipse at 80% -10%, rgba(180, 255, 120, .18), transparent 55%),
+                #05070a;
+        }
+        #packIntro .pk-beam {
+            position: absolute;
+            top: -20%;
+            width: 140px;
+            height: 160%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, .18), transparent 70%);
+            filter: blur(6px);
+            transform: rotate(14deg);
+            opacity: 0;
+            animation: pkBeam 2.6s ease-in-out infinite;
+        }
+        #packIntro .pk-beam.b1 {
+            left: 5%;
+        }
+        #packIntro .pk-beam.b2 {
+            left: 30%;
+            animation-delay: .4s;
+            transform: rotate(-10deg);
+        }
+        #packIntro .pk-beam.b3 {
+            left: 60%;
+            animation-delay: .8s;
+        }
+        @keyframes pkBeam {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        #packIntro .pk-stage {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+            max-width: 340px;
+            padding: 0 20px;
+        }
+        #packIntro .pk-tap-hint {
+            color: rgba(255, 255, 255, .5);
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity .4s;
+        }
+        #packIntro.pk-ready .pk-tap-hint {
+            opacity: 1;
+        }
+        #packIntro .pk-card {
+            width: 190px;
+            height: 270px;
+            border-radius: 16px;
+            position: relative;
+            perspective: 900px;
+            cursor: pointer;
+        }
+        #packIntro .pk-card-inner {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #1c1c2e, #0e0e18);
+            border: 1px solid rgba(255, 255, 255, .12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .55);
+            transform: scale(.9);
+            opacity: 0;
+            transition: transform .7s cubic-bezier(.2, .9, .25, 1.1), opacity .5s ease, box-shadow .5s;
+        }
+        #packIntro.pk-shown .pk-card-inner {
+            transform: scale(1);
+            opacity: 1;
+        }
+        #packIntro .pk-card-inner.pk-flip {
+            animation: pkFlip .7s ease forwards;
+        }
+        @keyframes pkFlip {
+            0% {
+                transform: scale(1) rotateY(0);
+            }
+            50% {
+                transform: scale(1.05) rotateY(90deg);
+            }
+            100% {
+                transform: scale(1) rotateY(0);
+            }
+        }
+        #packIntro .pk-glow-ring {
+            position: absolute;
+            inset: -30px;
+            border-radius: 30px;
+            opacity: 0;
+            filter: blur(30px);
+            transition: opacity .6s ease;
+            pointer-events: none;
+        }
+        #packIntro.pk-reveal .pk-glow-ring {
+            opacity: .8;
+        }
+        #packIntro[data-rarity="common"] .pk-glow-ring {
+            background: radial-gradient(circle, #9aa0ac, transparent 70%);
+        }
+        #packIntro[data-rarity="rare"] .pk-glow-ring {
+            background: radial-gradient(circle, #00b9f2, transparent 70%);
+        }
+        #packIntro[data-rarity="special"] .pk-glow-ring {
+            background: radial-gradient(circle, #c8f65a, transparent 70%);
+        }
+        #packIntro[data-rarity="legendary"] .pk-glow-ring {
+            background: radial-gradient(circle, #fbbf24, transparent 70%);
+        }
+        #packIntro .pk-card-front {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 16px 10px;
+            border-radius: 16px;
+            color: #fff;
+            text-align: center;
+        }
+        #packIntro.pk-reveal .pk-card-front {
+            display: flex;
+        }
+        #packIntro.pk-reveal .pk-card-silhouette {
+            display: none;
+        }
+        #packIntro .pk-card-silhouette {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #packIntro .pk-card-silhouette svg {
+            width: 32px;
+            height: 32px;
+            color: rgba(255, 255, 255, .4);
+        }
+        #packIntro .pk-rating {
+            font-size: 30px;
+            font-weight: 900;
+            line-height: 1;
+        }
+        #packIntro .pk-position {
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: .8;
+            margin-top: 2px;
+        }
+        #packIntro .pk-avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            margin: 10px 0 6px;
+            background: linear-gradient(145deg, #26263a, #13131f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            border: 2px solid rgba(255, 255, 255, .15);
+        }
+        #packIntro .pk-name {
+            font-size: 15px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+        #packIntro .pk-country {
+            font-size: 11px;
+            opacity: .7;
+            margin-top: 2px;
+        }
+        #packIntro .pk-rarity-tag {
+            margin-top: 8px;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, .2);
+        }
+        #packIntro .pk-particles {
+            position: absolute;
+            inset: -40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        #packIntro .pk-particle {
+            position: absolute;
+            bottom: -10px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .6);
+            animation: pkParticle linear infinite;
+        }
+        @keyframes pkParticle {
+            from {
+                transform: translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-360px);
+                opacity: 0;
+            }
+        }
+        #packIntro .pk-skip {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: rgba(255, 255, 255, .7);
+            font-size: 12px;
+            padding: 8px 16px;
+            border-radius: 99px;
+            cursor: pointer;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #packIntro .pk-beam,
+            #packIntro .pk-particle {
+                animation: none !important;
+            }
+        }
+
+        /* ── GLASS MODE (translucent layered surfaces) ── */
+        body.glass-mode {
+            --card: rgba(28, 28, 46, .48);
+            --card-hover: rgba(38, 38, 58, .55);
+            --border: rgba(255, 255, 255, .12);
+        }
+        body.glass-mode.light {
+            --card: rgba(255, 255, 255, .55);
+            --card-hover: rgba(255, 255, 255, .65);
+            --border: rgba(0, 0, 0, .1);
+        }
+        body.glass-mode header,
+        body.glass-mode .appearance-card,
+        body.glass-mode .profile-card,
+        body.glass-mode .vcard,
+        body.glass-mode .cart-item,
+        body.glass-mode .toast,
+        body.glass-mode .user-menu,
+        body.glass-mode .hdr-btn {
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        /* ── Appearance / atmosphere settings (profile) ── */
+        .appearance-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .appearance-card .ac-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .appearance-card .ac-head svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+        }
+        .appearance-card .ac-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+        .atmo-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .atmo-opt {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            transition: .2s;
+            text-align: left;
+            font-family: var(--font);
+            color: var(--text);
+        }
+        .atmo-opt:active {
+            transform: scale(.97);
+        }
+        .atmo-opt.active {
+            border-color: var(--accent);
+            box-shadow: inset 0 0 0 1px var(--accent);
+        }
+        .atmo-opt .swatch {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .atmo-opt .swatch.sw-gta {
+            background: linear-gradient(180deg, #5b1f5e, #ff6a4d 60%, #ffd98a);
+        }
+        .atmo-opt .swatch.sw-fifa {
+            background: radial-gradient(80% 70% at 50% 0%, #2b6b4a, #06180f);
+        }
+        .atmo-opt .swatch.sw-psplus {
+            background: linear-gradient(180deg, #1a1450, #3a2246);
+        }
+        .atmo-opt .swatch.sw-random {
+            background: conic-gradient(from 180deg, #ff6a4d, #2b6b4a, #8ea2ff, #ff6a4d);
+        }
+        .atmo-opt .oi-name {
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .atmo-opt .oi-desc {
+            font-size: 10px;
+            color: var(--muted);
+        }
+        .atmo-opt .check {
+            margin-left: auto;
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+            opacity: 0;
+            flex-shrink: 0;
+        }
+        .atmo-opt.active .check {
+            opacity: 1;
+        }
+        .atmo-preview-btn {
+            margin-top: 12px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: .2s;
+        }
+        .atmo-preview-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .atmo-preview-btn:active {
+            transform: scale(.98);
+        }
+        .atmo-preview-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ══════════════════════════════════════════════════════════
+           PERSISTENT APP-WIDE ANIMATED BACKGROUND
+           A subtle, always-on ambient layer that reflects the chosen
+           atmosphere theme and stays behind all app content.
+           ══════════════════════════════════════════════════════════ */
+        #appBg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .ab-glow {
+            position: absolute;
+            width: 78vw;
+            height: 78vw;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .5;
+            will-change: transform;
+        }
+        body.light .ab-glow {
+            opacity: .3;
+        }
+        .ab-glow-1 {
+            top: -22%;
+            left: -18%;
+            animation: abFloat1 26s ease-in-out infinite alternate;
+        }
+        .ab-glow-2 {
+            bottom: -26%;
+            right: -18%;
+            animation: abFloat2 32s ease-in-out infinite alternate;
+        }
+        @keyframes abFloat1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(12vw, 8vh) scale(1.25);
+            }
+        }
+        @keyframes abFloat2 {
+            0% {
+                transform: translate(0, 0) scale(1.15);
+            }
+            100% {
+                transform: translate(-11vw, -7vh) scale(1);
+            }
+        }
+        /* themed glow colors */
+        body.bg-gta .ab-glow-1 {
+            background: radial-gradient(circle, #ff6a4d, transparent 70%);
+        }
+        body.bg-gta .ab-glow-2 {
+            background: radial-gradient(circle, #b3306b, transparent 70%);
+        }
+        body.bg-fifa .ab-glow-1 {
+            background: radial-gradient(circle, #2b6b4a, transparent 70%);
+        }
+        body.bg-fifa .ab-glow-2 {
+            background: radial-gradient(circle, #0f5a34, transparent 70%);
+        }
+        body.bg-psplus .ab-glow-1 {
+            background: radial-gradient(circle, #6078ff, transparent 70%);
+        }
+        body.bg-psplus .ab-glow-2 {
+            background: radial-gradient(circle, #965adc, transparent 70%);
+        }
+
+        .ab-particles {
+            position: absolute;
+            inset: 0;
+        }
+        .ab-dot {
+            position: absolute;
+            bottom: -6vh;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .35);
+            animation: abRise linear infinite;
+        }
+        body.bg-gta .ab-dot {
+            background: rgba(255, 190, 120, .45);
+        }
+        body.bg-fifa .ab-dot {
+            background: rgba(200, 246, 90, .4);
+        }
+        body.bg-psplus .ab-dot {
+            background: rgba(150, 180, 255, .45);
+        }
+        @keyframes abRise {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: .7;
+            }
+            90% {
+                opacity: .5;
+            }
+            100% {
+                transform: translateY(-114vh) translateX(var(--abx, 20px));
+                opacity: 0;
+            }
+        }
+
+        /* Keep all app chrome above the ambient background */
+        header,
+        #welcomeBanner,
+        .main-tabs,
+        .scroll-content,
+        .user-menu,
+        .navi {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .ab-glow,
+            .ab-dot {
+                animation: none !important;
+            }
+        }
+
+        /* theme picker reuses the atmosphere option styling */
+        .theme-swatch {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .theme-swatch.sw-dark {
+            background: linear-gradient(135deg, #13131f, #0b0b14);
+        }
+        .theme-swatch.sw-light {
+            background: linear-gradient(135deg, #ffffff, #e6e6df);
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== OFFLINE ===== -->
-    <div id="offlineBanner"><i class="material-icons-round">wifi_off</i><span>Internet aloqasi yo'q</span></div>
-
-    <!-- ===== PRELOADER ===== -->
-    <div id="preloader">
-        <div class="pre-logo">P<span>C</span></div>
-        <div class="pre-bar"><div class="pre-fill"></div></div>
+    <!-- ─── PERSISTENT AMBIENT BACKGROUND ─── -->
+    <div id="appBg" aria-hidden="true">
+        <div class="ab-glow ab-glow-1"></div>
+        <div class="ab-glow ab-glow-2"></div>
+        <div class="ab-particles" id="appBgParticles"></div>
     </div>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ─── FIFA-STYLE PACK OPENING (entrance) ─── -->
+    <div id="packIntro" role="presentation">
+        <div class="pk-stadium"></div>
+        <div class="pk-beam b1"></div>
+        <div class="pk-beam b2"></div>
+        <div class="pk-beam b3"></div>
+        <div class="pk-stage">
+            <div class="pk-card" id="pkCard" onclick="advancePackIntro()">
+                <div class="pk-particles" id="pkParticles"></div>
+                <div class="pk-glow-ring"></div>
+                <div class="pk-card-inner" id="pkCardInner">
+                    <div class="pk-card-silhouette">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 2l2.6 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.4-1.4z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="pk-card-front">
+                        <div class="pk-rating" id="pkRating">--</div>
+                        <div class="pk-position" id="pkPosition">—</div>
+                        <div class="pk-avatar" id="pkAvatar">?</div>
+                        <div class="pk-name" id="pkName">—</div>
+                        <div class="pk-country" id="pkCountry">—</div>
+                        <div class="pk-rarity-tag" id="pkRarityTag">—</div>
+                    </div>
+                </div>
+            </div>
+            <div class="pk-tap-hint" id="pkTapHint">Ochish uchun bosing</div>
+            <button class="pk-skip" type="button" onclick="skipPackIntro()">O'tkazib yuborish</button>
+        </div>
+    </div>
+
+    <!-- ─── CINEMATIC ENTRANCE ATMOSPHERE ─── -->
+    <div id="atmoIntro" role="presentation">
+        <div class="atmo-scene">
+            <div class="atmo-layer l-sky"></div>
+            <div class="atmo-layer l-sun"></div>
+            <div class="atmo-layer l-floods"></div>
+            <div class="atmo-layer l-orbs"></div>
+            <div class="atmo-layer l-pitch"></div>
+            <div class="atmo-layer l-skyline"></div>
+            <div class="atmo-layer l-windows"></div>
+            <div class="atmo-layer l-haze"></div>
+            <div class="atmo-layer l-sweep"></div>
+            <div class="atmo-particles" id="atmoParticles"></div>
+            <div class="atmo-leaves" id="atmoLeaves"></div>
+            <div class="atmo-grain"></div>
+            <div class="atmo-vignette"></div>
+        </div>
+        <div class="atmo-content">
+            <div class="atmo-logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 8.5A2.5 2.5 0 0 1 8.5 6h7A2.5 2.5 0 0 1 18 8.5v0a4 4 0 0 1-1.2 2.85l-3 2.9a2.4 2.4 0 0 0-.72 1.72V19" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="8.6" cy="10.4" r="1.1" fill="var(--accent)"/>
+                    <circle cx="15.4" cy="10.4" r="1.1" fill="#fff"/>
+                </svg>
+            </div>
+            <div class="atmo-title">Injoy<span>game</span></div>
+            <div class="atmo-tag" id="atmoTag">Loading atmosphere</div>
+            <div class="atmo-bar"><i></i></div>
+            <button class="atmo-enter" id="atmoEnter" type="button">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Kirish
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── PRELOADER ─── -->
+    <div id="preloader">
+        <div class="pre-logo">I<span>G</span></div>
+        <div class="pre-bar"><div class="pre-fill"></div></div>
+        <div class="pre-sub">Injoygame</div>
+    </div>
+
+    <!-- ─── HEADER ─── -->
     <header>
         <a class="logo" onclick="goHome()">
-            <div class="logo-icon">PC</div>
-            <div class="logo-text">Plasta<span>sion</span></div>
+            <div class="logo-icon">IG</div>
+            <div class="logo-text">Injoy<span>game</span></div>
         </a>
         <div class="hdr-right">
-            <button class="hdr-btn" onclick="toggleAI()" style="font-size:18px;">
-                <i class="material-icons-round">auto_awesome</i>
-            </button>
-            <button class="hdr-btn" onclick="switchMainTab('savad')" style="font-size:18px;">
-                <i class="material-icons-round">shopping_cart</i>
+            <button class="hdr-btn" onclick="switchMainTab('savad')">
+                <span class="mat-icon">shopping_cart</span>
                 <span class="badge" id="headerCartBadge">0</span>
             </button>
-            <img id="uImg" src="https://i.ibb.co/pjZ7NbXd/image.png" class="uavatar" onclick="toggleUserMenu()">
+            <div class="uavatar" id="uAvatar" onclick="toggleUserMenu()">?</div>
         </div>
     </header>
 
-    <!-- ===== USER MENU ===== -->
+    <!-- ─── USER MENU ─── -->
     <div class="user-menu" id="userMenu">
         <div class="user-info">
-            <img id="menuUserPic" src="https://i.ibb.co/pjZ7NbXd/image.png">
+            <div class="avatar" id="menuAvatar">?</div>
             <div>
                 <div class="name" id="menuUserName">Mehmon</div>
                 <div class="email" id="menuUserEmail">Telegram orqali</div>
             </div>
         </div>
-        <button class="menu-item" onclick="switchMainTab('savad')"><span class="menu-item-emoji">🛒</span> Savad</button>
-        <button class="menu-item" onclick="switchMainTab('profile')"><span class="menu-item-emoji">👤</span> Profil</button>
-        <button class="menu-item danger" onclick="resetApp()"><span class="menu-item-emoji">🔄</span> Qayta yuklash</button>
+        <button class="menu-item" onclick="switchMainTab('savad')">
+            <span class="mat-icon" style="font-size:18px;">shopping_cart</span> Savad
+        </button>
+        <button class="menu-item" onclick="switchMainTab('profile')">
+            <span class="mat-icon" style="font-size:18px;">person</span> Profil
+        </button>
+        <button class="menu-item danger" onclick="logoutUser()">
+            <span class="mat-icon" style="font-size:18px;">logout</span> Chiqish
+        </button>
     </div>
 
-    <!-- ===== WELCOME BANNER ===== -->
+    <!-- ─── WELCOME ─── -->
     <div id="welcomeBanner">
-        <div class="greeting">👋 Salom, <span id="welcomeName">Mehmon</span>!</div>
-        <div class="badge-new">🎮 Premium</div>
+        <div class="greeting">Salom, <span id="welcomeName">Mehmon</span>!</div>
+        <div class="badge-new">Premium</div>
     </div>
 
-    <!-- ===== MAIN TABS ===== -->
+    <!-- ─── TABS ─── -->
     <div class="main-tabs" id="mainTabs">
         <button class="main-tab active" data-tab="cabins" onclick="switchMainTab('cabins')">
-            <span class="tab-emoji">🏘</span> Kabinalar
+            <span class="mat-icon">home</span> Kabinalar
         </button>
         <button class="main-tab" data-tab="menu" onclick="switchMainTab('menu')">
-            <span class="tab-emoji">🍴</span> Menyu
+            <span class="mat-icon">restaurant_menu</span> Menyu
         </button>
         <button class="main-tab" data-tab="savad" onclick="switchMainTab('savad')" style="position:relative;">
-            <span class="tab-emoji">🛒</span> Savad
+            <span class="mat-icon">shopping_cart</span> Savad
             <span class="tab-badge" id="cartTabBadge">0</span>
         </button>
         <button class="main-tab" data-tab="profile" onclick="switchMainTab('profile')">
-            <span class="tab-emoji">👤</span> Profil
+            <span class="mat-icon">person</span> Profil
         </button>
     </div>
 
-    <!-- ===== SCROLLABLE CONTENT ===== -->
+    <!-- ─── SCROLL CONTENT ─── -->
     <div class="scroll-content" id="scrollContent">
 
-        <!-- ===== CABINS PAGE ===== -->
+        <!-- CABINS -->
         <div id="cabinsPage" class="page show">
             <div class="search-wrap">
                 <div class="sbox">
-                    <i class="material-icons-round">search</i>
-                    <input type="text" id="cabinSearch" placeholder="Kabinani qidirish..." oninput="filterCabins()">
+                    <span class="mat-icon">search</span>
+                    <input type="text" id="cabinSearch" placeholder="Kabina qidirish..." oninput="filterCabins()">
                 </div>
             </div>
             <div class="cats-wrap" id="cabinCatList"></div>
             <div class="grid" id="cabinGrid"></div>
         </div>
 
-        <!-- ===== MENU PAGE ===== -->
+        <!-- MENU -->
         <div id="menuPage" class="page">
             <div class="search-wrap">
                 <div class="sbox">
-                    <i class="material-icons-round">search</i>
-                    <input type="text" id="menuSearch" placeholder="Menyudan qidirish..." oninput="filterMenu()">
+                    <span class="mat-icon">search</span>
+                    <input type="text" id="menuSearch" placeholder="Menyu qidirish..." oninput="filterMenu()">
                 </div>
             </div>
             <div class="cats-wrap" id="menuCatList"></div>
             <div class="grid" id="menuGrid"></div>
         </div>
 
-        <!-- ===== SAVAD PAGE ===== -->
+        <!-- SAVAD -->
         <div id="savadPage" class="page">
-            <div class="page-title"><span class="title-emoji">🛒</span> Savad</div>
+            <div class="page-title">
+                <span class="mat-icon">shopping_cart</span> Savad
+            </div>
             <div id="cartList"></div>
             <div class="cart-total" id="cartTotal" style="display:none;">
                 <div>Umumiy summa</div>
-                <div class="amount" id="cartTotalAmount">0 so'm</div>
-                <button class="btn-pay" onclick="openPaymentSystem()">
-                    <span class="btn-emoji">💳</span> To'lovga o'tish
-                </button>
+                <div class="amount" id="cartTotalAmount">0 UZS</div>
+                <button class="btn-order" onclick="placeOrder()">Buyurtma berish</button>
             </div>
         </div>
 
-        <!-- ===== PROFILE PAGE ===== -->
+        <!-- PROFILE -->
         <div id="profilePage" class="page">
-            <div class="page-title"><span class="title-emoji">👤</span> Profil</div>
+            <div class="page-title">
+                <span class="mat-icon">person</span> Profil
+            </div>
             <div class="profile-card">
                 <div class="row"><span class="label">Ism</span><span class="value" id="profileName">Mehmon</span></div>
                 <div class="row"><span class="label">Telegram ID</span><span class="value" id="profileId">—</span></div>
                 <div class="row"><span class="label">Bronlar</span><span class="value" id="profileBookings">0</span></div>
                 <div class="row"><span class="label">Savatdagi</span><span class="value" id="profileCart">0</span></div>
             </div>
-        </div>
-
-        <!-- ===== PAYMENT ===== -->
-        <div id="paymentSystem">
-            <div class="page-title"><span class="title-emoji">💳</span> To'lov tizimi</div>
-            <div class="payment-card">
-                <div class="row"><span>Umumiy to'lov:</span><b id="payTotalAmount">0 so'm</b></div>
-                <div class="row" style="padding:8px 0;background:var(--surface);border-radius:8px;margin:4px 0;padding:8px 10px;">
-                    <span>Qolgan:</span><b id="payRemaining" style="color:var(--red);font-size:16px;">0 so'm</b>
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 3a9 9 0 1 0 9 9c0-.46-.03-.92-.1-1.36a5.4 5.4 0 0 1-7.54-7.54c-.44-.07-.9-.1-1.36-.1z" fill="currentColor"/>
+                    </svg>
+                    Tema
                 </div>
-                <div class="row" style="font-size:11px;color:var(--muted);"><span>Karta:</span><b style="color:var(--text);">5440 8144 4444 4028</b></div>
-            </div>
-            <div class="payment-card">
-                <div class="row" style="font-size:12px;"><span>Jarayon</span><span id="payPercent">0%</span></div>
-                <div class="pay-progress"><div class="fill" id="payProgress"></div></div>
-                <div class="row" style="font-size:11px;color:var(--muted);margin-top:4px;">
-                    <span id="payPaidText">To'landi: 0 so'm</span>
-                    <span id="payRemainingText">Qoldi: 0 so'm</span>
+                <div class="ac-sub">Ilova ko'rinishini tanlang</div>
+                <div class="atmo-options" id="themeOptions" style="grid-template-columns:repeat(2,1fr);">
+                    <button class="atmo-opt" type="button" data-theme="dark" onclick="setThemePref('dark')">
+                        <span class="theme-swatch sw-dark"></span>
+                        <span><span class="oi-name">Tungi</span><br><span class="oi-desc">Qorong'i rejim</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-theme="light" onclick="setThemePref('light')">
+                        <span class="theme-swatch sw-light"></span>
+                        <span><span class="oi-name">Yorug'</span><br><span class="oi-desc">Kunduzgi rejim</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
             </div>
-            <div class="payment-card" style="border:2px solid var(--click-blue);background:rgba(0,185,242,0.04);">
-                <div style="text-align:center;margin-bottom:8px;font-weight:600;color:var(--muted);font-size:12px;">🚀 Tez va xavfsiz to'lov</div>
-                <button class="click-btn" onclick="startClickPayment()">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrt8NaD6Y7W7wLSqAQ3Bf6rjCsJk7J6Q3A78Xg17ovcw&s=10" alt="Click"> Click orqali to'lash
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.6"/>
+                        <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    Kirish atmosferasi
+                </div>
+                <div class="ac-sub">Ilovaga kirishdagi kinematik muhitni tanlang</div>
+                <div class="atmo-options" id="atmoOptions">
+                    <button class="atmo-opt" type="button" data-atmo="gta" onclick="setAtmospherePref('gta')">
+                        <span class="swatch sw-gta"></span>
+                        <span><span class="oi-name">GTA uslubi</span><br><span class="oi-desc">Shahar · quyosh botishi</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-atmo="fifa" onclick="setAtmospherePref('fifa')">
+                        <span class="swatch sw-fifa"></span>
+                        <span><span class="oi-name">FIFA uslubi</span><br><span class="oi-desc">Stadion · maydon</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-atmo="psplus_autumn" onclick="setAtmospherePref('psplus_autumn')">
+                        <span class="swatch sw-psplus"></span>
+                        <span><span class="oi-name">PS Plus · Kuz</span><br><span class="oi-desc">Premium · kechki</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-atmo="random" onclick="setAtmospherePref('random')">
+                        <span class="swatch sw-random"></span>
+                        <span><span class="oi-name">Tasodifiy</span><br><span class="oi-desc">Har safar boshqacha</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+                <button class="atmo-preview-btn" type="button" onclick="previewAtmosphere()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M8 5v14l11-7z" fill="currentColor"/>
+                    </svg>
+                    Atmosferani ko'rish
                 </button>
             </div>
-            <div id="payStatus" style="text-align:center;font-weight:600;color:var(--muted);margin:6px 0;font-size:13px;"></div>
-            <div id="payResult" style="display:none;padding:14px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);">
-                <div id="payResultContent"></div>
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M20 12V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h9" stroke="currentColor" stroke-width="1.6"/>
+                        <path d="M16 15l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Pack ochilishi
+                </div>
+                <div class="ac-sub">Ilova ochilganda futbolchi kartasi animatsiyasi</div>
+                <div class="atmo-options" id="packOptions" style="grid-template-columns:repeat(2,1fr);">
+                    <button class="atmo-opt" type="button" data-pack="on" onclick="setPackIntroPref(true)">
+                        <span><span class="oi-name">Yoqilgan</span><br><span class="oi-desc">Har kirishda</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-pack="off" onclick="setPackIntroPref(false)">
+                        <span><span class="oi-name">O'chirilgan</span><br><span class="oi-desc">To'g'ridan-to'g'ri kirish</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
             </div>
-            <button onclick="closePaymentSystem()" class="pay-close">❌ Yopish</button>
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.6"/>
+                        <path d="M3 15h18" stroke="currentColor" stroke-width="1.6" opacity=".5"/>
+                    </svg>
+                    Shisha rejimi
+                </div>
+                <div class="ac-sub">Kartalarni shaffof va xira fonli qiling</div>
+                <div class="atmo-options" id="glassOptions" style="grid-template-columns:repeat(2,1fr);">
+                    <button class="atmo-opt" type="button" data-glass="on" onclick="setGlassPref(true)">
+                        <span><span class="oi-name">Yoqilgan</span><br><span class="oi-desc">Shaffof qatlam</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button class="atmo-opt" type="button" data-glass="off" onclick="setGlassPref(false)">
+                        <span><span class="oi-name">O'chirilgan</span><br><span class="oi-desc">Oddiy ko'rinish</span></span>
+                        <svg class="check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M3 12a9 9 0 1 0 9-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M3 5v6h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Bronlar tarixi
+                </div>
+                <div class="ac-sub">So'rovlaringiz va ularning holati</div>
+                <div id="bookingHistoryList"></div>
+            </div>
+            <div class="appearance-card">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                        <path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                    Bronlar taqvimi
+                </div>
+                <div class="ac-sub">Har qanday sanadagi barcha bronlarni ko'ring — 1 kundan 100 yilgacha</div>
+                <div class="sheet-book-row" style="grid-template-columns:1fr;margin-bottom:8px;">
+                    <div class="field"><label>Sana</label><input type="date" id="calendarDate" onchange="renderCalendarBookings()"></div>
+                </div>
+                <div id="calendarBookingsList"></div>
+            </div>
+            <div class="appearance-card" id="adminCard" style="display:none;">
+                <div class="ac-head">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Admin: tasdiqlash
+                </div>
+                <div class="ac-sub">Kutilayotgan bron so'rovlarini tasdiqlang yoki rad eting</div>
+                <div id="adminPendingList"></div>
+            </div>
+            <div style="font-weight:700;font-size:16px;margin:12px 0 8px;">Kabinalar bandlik holati</div>
+            <div id="availabilityContainer" class="availability-grid"></div>
         </div>
     </div>
 
-    <!-- ===== BOTTOM NAV ===== -->
+    <!-- ─── NAV ─── -->
     <nav class="nav">
         <button class="navi active" onclick="nav('cabins',this)">
-            <span class="nav-emoji">🏘</span>
-            <span>Kabinalar</span>
+            <span class="mat-icon">home</span><span>Kabinalar</span>
         </button>
         <button class="navi" onclick="nav('menu',this)">
-            <span class="nav-emoji">🍴</span>
-            <span>Menyu</span>
+            <span class="mat-icon">restaurant_menu</span><span>Menyu</span>
         </button>
         <button class="navi" onclick="nav('savad',this)">
-            <span class="nav-emoji">🛒</span>
-            <span>Savad</span>
+            <span class="mat-icon">shopping_cart</span><span>Savad</span>
             <span class="badge-cart" id="navCartBadge">0</span>
         </button>
         <button class="navi" onclick="nav('profile',this)">
-            <span class="nav-emoji">👤</span>
-            <span>Profil</span>
+            <span class="mat-icon">person</span><span>Profil</span>
         </button>
     </nav>
 
-    <!-- ===== MODAL ===== -->
+    <!-- ─── MODAL ─── -->
     <div class="modal-over" id="fullModal"><div class="modal-sheet" id="mBody"></div></div>
 
-    <!-- ===== VR OVERLAY ===== -->
-    <div id="vrOverlay">
-        <button class="vr-close" onclick="closeVR()">✕</button>
-        <a-scene>
-            <a-sky id="vrSky" src="" rotation="0 -90 0" crossorigin="anonymous"></a-sky>
-            <a-camera look-controls="reverseMouseDrag: true" sensitivity="0.08"></a-camera>
+    <!-- ─── 360 / VR PANORAMA MODAL ─── -->
+    <div id="panoramaModal">
+        <button class="panorama-close" onclick="closePanorama()"><span class="mat-icon">close</span></button>
+        <div class="panorama-hint">Aylanish uchun barmog'ingiz bilan suring</div>
+        <a-scene embedded vr-mode-ui="enabled: true" loading-screen="enabled: false">
+            <a-sky id="panoramaSky" src="" rotation="0 -90 0" crossorigin="anonymous"></a-sky>
+            <a-camera look-controls="reverseMouseDrag: true"></a-camera>
         </a-scene>
     </div>
 
-    <!-- ===== AI ===== -->
-    <button id="aiToggle" onclick="toggleAI()"><i class="material-icons-round">auto_awesome</i></button>
-    <div id="aiWin">
-        <div class="ai-header">
-            <div>
-                <div class="ai-title">AFNA AI 🤖</div>
-                <div class="ai-status"><div class="ai-dot"></div> Online</div>
+    <!-- ─── QR MODAL ─── -->
+    <div class="modal-over qr-modal" id="qrModal">
+        <div class="modal-sheet" style="max-width:400px;margin:0 auto;text-align:center;">
+            <button class="sheet-close" onclick="closeQR()"><span class="mat-icon">close</span></button>
+            <div class="sheet-body">
+                <div style="font-weight:800;font-size:18px;margin-bottom:4px;">Buyurtma raqami</div>
+                <div class="order-id" id="qrOrderId">---</div>
+                <div class="qr-container" id="qrCodeContainer"></div>
+                <div style="font-size:12px;color:var(--muted);margin-top:8px;">QR kodni skanerlab buyurtma holatini kuzating</div>
+                <button class="abtn abtn-add" style="width:100%;padding:10px;margin-top:12px;" onclick="closeQR()">Yopish</button>
             </div>
-            <button class="close-btn" onclick="toggleAI()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:22px;">✕</button>
-        </div>
-        <div id="aiMsgs"></div>
-        <div class="ai-inp-row">
-            <input type="text" id="aiInp" placeholder="Savolingizni yozing..." onkeydown="if(event.key==='Enter')sendMsg()">
-            <button class="send-btn" onclick="sendMsg()"><i class="material-icons-round">send</i></button>
         </div>
     </div>
 
     <script>
-        // ============================================================
-        //  PREMIUM EMOJIS MAP
-        // ============================================================
-        const PREMIUM_EMOJIS = {
-            '🏘': '5257963315258204021',
-            '🍴': '5296727963495079440',
-            '🛒': '5258204546391351475',
-            '👤': '5258011929993026890',
-            '📋': '5257965174979042426',
-            '✅': '5258057130228849960',
-            '❌': '5258226313285607065',
-            '➕': '5258108352008823107',
-            '⬅️': '5258236805890710909',
-            '➡️': '5260450573768990626',
-            '🔄': '5258420634785947640',
-            '⭐️': '5258165702707125574',
-            '💬': '5258215846450305872',
-            '📸': '5258012149036365477',
-            '🔎': '5429571366384842791',
-            '⚙️': '5258096772776991776',
-            '🔒': '5258476306152038031',
-            '💡': '5258216851472654189',
-            '📍': '5258509201306557640',
-            '📦': '5258134813302332906',
-            '💰': '5258204546391351475',
-            '🎮': '5258508428212445001',
-            '📰': '5249231689695115145',
-            '🏷': '5296348778012361146',
-            '💎': '5359719332542718652',
-            '🔖': '5359629206948976159'
-        };
-
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         //  CONFIG
-        // ============================================================
-        const FIREBASE_URL = "https://club-3d454-default-rtdb.firebaseio.com/";
-        const BOT_TOKEN = "8600058131:AAGM-KhqVO0r_8npRlBxbcieuufPBaTVJVY";
-        const MENU_ORDERS_CHAT_ID = "-5171281890";
-        const CABIN_BOOKING_CHAT_ID = "-1004401105554";
+        // ═══════════════════════════════════════════════════════════════
+        const FB_URL = 'https://club-3d454-default-rtdb.firebaseio.com/';
+        const BOT_TOKEN = '8600058131:AAGM-KhqVO0r_8npRlBxbcieuufPBaTVJVY';
+        const MENU_ORDERS_CHAT_ID = '-5171281890';
+        const CABIN_BOOKING_CHAT_ID = '-1004401105554';
 
-        // ============================================================
+        // ═══ DEFAULT PANORAMA (from 360 jala.html) ═══
+        // This URL is used for any cabin that does NOT have a panorama in Firebase.
+        const DEFAULT_PANORAMA = 'https://i.ibb.co/d0WFMNVB/Gemini-Generated-Image-h1wt4nh1wt4nh1wt.jpg';
+
+        // ═══════════════════════════════════════════════════════════════
         //  STATE
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
+        let dbData = { cabins: {}, menu: {}, room_status: {}, texts: {}, users: {} };
         let cabins = [];
         let menuItems = [];
         let cart = [];
-        let userName = "Mehmon";
-        let userPic = "https://i.ibb.co/pjZ7NbXd/image.png";
-        let tgUserId = null;
+        let user = null;
         let currentTab = 'cabins';
         let cabinCat = 'Barchasi';
         let menuCat = 'Barchasi';
         let searchCabin = '',
             searchMenu = '';
-        let paymentTotal = 0,
-            paymentPaid = 0,
-            paymentComplete = false;
-        let comments = {};
         let roomStatus = {};
+        let bookings = {};
+        const ADMIN_IDS = [];
 
-        // ============================================================
-        //  EMOJI HELPER
-        // ============================================================
-        function getPremiumEmoji(emoji) {
-            const id = PREMIUM_EMOJIS[emoji];
-            if (id) {
-                return `<span class="premium-emoji" data-emoji-id="${id}">${emoji}</span>`;
-            }
-            return emoji;
-        }
-
-        function renderWithPremiumEmojis(html) {
-            // Replace emojis with premium versions where available
-            return html.replace(/[^\x00-\x7F]/g, function(match) {
-                const id = PREMIUM_EMOJIS[match];
-                if (id) {
-                    return `<span class="premium-emoji" data-emoji-id="${id}">${match}</span>`;
-                }
-                return match;
-            });
-        }
-
-        // ============================================================
-        //  TELEGRAM WEBAPP AUTO LOGIN
-        // ============================================================
-        function autoLoginWithTelegram() {
+        // ═══════════════════════════════════════════════════════════════
+        //  INIT
+        // ═══════════════════════════════════════════════════════════════
+        async function init() {
             try {
                 const tg = window.Telegram?.WebApp;
                 if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                    const user = tg.initDataUnsafe.user;
-                    tgUserId = user.id;
-                    userName = user.first_name || user.username || 'Mehmon';
-                    if (user.last_name) userName += ' ' + user.last_name;
-                    userPic = user.photo_url || 'https://i.ibb.co/pjZ7NbXd/image.png';
+                    const tgUser = tg.initDataUnsafe.user;
+                    user = {
+                        id: tgUser.id,
+                        name: tgUser.first_name || 'User',
+                        username: tgUser.username || '',
+                        phone: ''
+                    };
+                    localStorage.setItem('pc_user', JSON.stringify(user));
                     if (tg.expand) tg.expand();
-                    return true;
+                    if (tg.ready) tg.ready();
+                } else {
+                    const saved = localStorage.getItem('pc_user');
+                    if (saved) {
+                        try { user = JSON.parse(saved); } catch (e) {}
+                    }
                 }
-                return false;
-            } catch (e) {
-                console.warn('Telegram auto-login error:', e);
-                return false;
-            }
-        }
-
-        // ============================================================
-        //  LOAD DATA FROM FIREBASE
-        // ============================================================
-        async function loadData() {
-            try {
-                // Load cabins
-                const cabinsRes = await fetch(`${FIREBASE_URL}/cabins.json`);
-                const cabinsData = await cabinsRes.json();
-                cabins = [];
-                if (cabinsData) {
-                    Object.keys(cabinsData).forEach(key => {
-                        const item = cabinsData[key];
-                        cabins.push({
-                            id: key,
-                            type: key,
-                            name: item.name || key,
-                            price: parseInt(item.price?.replace(/\D/g, '')) || 0,
-                            capacity: item.capacity || '—',
-                            equipment: item.equipment || '—',
-                            image: item.image || '',
-                            emoji: item.emoji || '🟢',
-                            total: item.total || '—',
-                            rooms: item.rooms || []
-                        });
-                    });
+                if (!user) {
+                    user = {
+                        id: 'guest_' + Date.now(),
+                        name: 'Mehmon',
+                        username: '',
+                        phone: ''
+                    };
+                    localStorage.setItem('pc_user', JSON.stringify(user));
                 }
-
-                // Load menu
-                const menuRes = await fetch(`${FIREBASE_URL}/menu.json`);
-                const menuData = await menuRes.json();
-                menuItems = [];
-                if (menuData) {
-                    Object.keys(menuData).forEach(category => {
-                        const items = menuData[category];
-                        if (typeof items === 'object' && items !== null) {
-                            Object.keys(items).forEach(key => {
-                                const item = items[key];
-                                menuItems.push({
-                                    id: key,
-                                    category: category,
-                                    name: item.name || key,
-                                    price: parseInt(item.price?.replace(/\D/g, '')) || 0,
-                                    image: item.image || '',
-                                    desc: item.desc || ''
-                                });
-                            });
-                        }
-                    });
-                }
-
-                // Load room status
-                const statusRes = await fetch(`${FIREBASE_URL}/room_status.json`);
-                const statusData = await statusRes.json();
-                roomStatus = statusData || {};
-
-                // Load users
-                const usersRes = await fetch(`${FIREBASE_URL}/users.json`);
-                const usersData = await usersRes.json();
-                if (usersData && tgUserId && usersData[tgUserId]) {
-                    const user = usersData[tgUserId];
-                    userName = user.full_name || userName;
-                }
-
+                updateUserUI();
+                await loadData();
+                await loadBookings();
+                applyAutoTheme();
+                updateOnlineStatus();
                 renderCabins();
                 renderMenu();
                 renderCart();
-                updateCartBadge();
+                updateBadges();
                 updateProfile();
-                renderCabinCats();
-                renderMenuCats();
+                renderAvailability();
+                renderAdminPending();
+                document.getElementById('preloader').classList.add('hidden');
+            } catch (e) {
+                console.error('Init error:', e);
+                document.getElementById('preloader').classList.add('hidden');
+                showToast('Xatolik yuz berdi', 'warning');
+            }
+        }
 
+        // ═══════════════════════════════════════════════════════════════
+        //  LOAD DATA FROM FIREBASE
+        // ═══════════════════════════════════════════════════════════════
+        async function loadData() {
+            try {
+                const resp = await fetch(FB_URL + '.json');
+                const data = await resp.json();
+                dbData = data || {};
+                cabins = [];
+                if (dbData.cabins) {
+                    for (const [type, info] of Object.entries(dbData.cabins)) {
+                        const rooms = info.rooms || [];
+                        for (const roomNum of rooms) {
+                            const cabin = {
+                                id: type + '_' + roomNum,
+                                type: type,
+                                room: roomNum,
+                                name: info.name || type + ' ' + roomNum,
+                                price: parseInt(String(info.price).replace(/\D/g, '')) || 0,
+                                capacity: info.capacity || '—',
+                                equipment: info.equipment || '—',
+                                image: info.image || '',
+                                total: info.total || '—',
+                                emoji: info.emoji || '',
+                                panorama: info.panorama || info.image360 || ''
+                            };
+                            // ═══ FIX: if no panorama is set, use the default ═══
+                            if (!cabin.panorama) {
+                                cabin.panorama = DEFAULT_PANORAMA;
+                            }
+                            cabins.push(cabin);
+                        }
+                    }
+                }
+                menuItems = [];
+                if (dbData.menu) {
+                    for (const [category, items] of Object.entries(dbData.menu)) {
+                        if (typeof items === 'object' && items !== null) {
+                            for (const [key, item] of Object.entries(items)) {
+                                menuItems.push({
+                                    id: category + '_' + key,
+                                    category: category,
+                                    name: item.name || key,
+                                    price: parseInt(String(item.price).replace(/\D/g, '')) || 0,
+                                    image: item.image || '',
+                                    desc: item.desc || ''
+                                });
+                            }
+                        }
+                    }
+                }
+                roomStatus = dbData.room_status || {};
+                if (dbData.users && user && dbData.users[user.id]) {
+                    const u = dbData.users[user.id];
+                    user.name = u.full_name || user.name;
+                }
             } catch (e) {
                 console.error('Load data error:', e);
                 showToast('Maʼlumotlarni yuklashda xatolik', 'warning');
             }
         }
 
-        // ============================================================
-        //  INIT
-        // ============================================================
-        function initApp() {
-            applyAutoTheme();
-            updateOnlineStatus();
-            document.getElementById('preloader').classList.add('hidden');
-
-            // Update UI with user info
-            document.getElementById('menuUserName').textContent = userName;
-            document.getElementById('welcomeName').textContent = userName;
-            document.getElementById('profileName').textContent = userName;
-            if (tgUserId) {
-                document.getElementById('profileId').textContent = tgUserId;
-            }
-            document.getElementById('uImg').src = userPic;
-            document.getElementById('menuUserPic').src = userPic;
-
-            loadData();
-            addChatMsg("Assalomu alaykum! Plastasion Club ga xush kelibsiz! 🌟 Kabinalar va menyu haqida yordam bera olaman.",
-                "bot");
-        }
-
+        // ═══════════════════════════════════════════════════════════════
+        //  THEME & ONLINE
+        // ═══════════════════════════════════════════════════════════════
         function applyAutoTheme() {
             const hour = new Date().getHours();
             const isDay = hour >= 6 && hour < 20;
             document.body.classList.toggle('light', isDay);
         }
 
-        // ============================================================
+        function updateOnlineStatus() {}
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // ═══════════════════════════════════════════════════════════════
+        //  USER
+        // ═══════════════════════════════════════════════════════════════
+        function updateUserUI() {
+            if (!user) return;
+            const avatar = document.getElementById('uAvatar');
+            const menuAvatar = document.getElementById('menuAvatar');
+            const nameEl = document.getElementById('menuUserName');
+            const emailEl = document.getElementById('menuUserEmail');
+            const welcomeName = document.getElementById('welcomeName');
+            const initial = (user.name || 'U').charAt(0).toUpperCase();
+            avatar.textContent = initial;
+            menuAvatar.textContent = initial;
+            nameEl.textContent = user.name || 'Mehmon';
+            emailEl.textContent = user.username ? '@' + user.username : 'Telegram orqali';
+            welcomeName.textContent = user.name || 'Mehmon';
+        }
+
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('show');
+        }
+
+        function logoutUser() {
+            if (confirm('Hisobdan chiqmoqchimisiz?')) {
+                user = null;
+                localStorage.removeItem('pc_user');
+                document.getElementById('userMenu').classList.remove('show');
+                location.reload();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
         //  TABS & NAV
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         function switchMainTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.main-tab').forEach(el => el.classList.remove('active'));
             document.querySelector(`.main-tab[data-tab="${tab}"]`)?.classList.add('active');
-
             document.getElementById('cabinsPage').classList.toggle('show', tab === 'cabins');
             document.getElementById('menuPage').classList.toggle('show', tab === 'menu');
             document.getElementById('savadPage').classList.toggle('show', tab === 'savad');
             document.getElementById('profilePage').classList.toggle('show', tab === 'profile');
-            document.getElementById('paymentSystem').style.display = 'none';
-
             document.body.classList.toggle('show-savad', tab === 'savad');
-
             if (tab === 'savad') renderCart();
-            if (tab === 'profile') updateProfile();
-
+            if (tab === 'profile') { updateProfile();
+                renderAvailability();
+                refreshBookingsUI(); }
             document.querySelectorAll('.navi').forEach(n => n.classList.remove('active'));
             const map = { cabins: 'cabins', menu: 'menu', savad: 'savad', profile: 'profile' };
             const navBtn = document.querySelector(`.navi[onclick*="${map[tab]}"]`);
             if (navBtn) navBtn.classList.add('active');
-
-            document.getElementById('aiWin').classList.remove('show');
-            closeM();
-
+            closeModal();
             const sc = document.getElementById('scrollContent');
             if (sc) sc.scrollTop = 0;
         }
 
         function nav(p, el) {
             const map = { cabins: 'cabins', menu: 'menu', savad: 'savad', profile: 'profile' };
-            if (p === 'savad') { switchMainTab('savad'); return; }
             switchMainTab(map[p] || 'cabins');
         }
 
         function goHome() { switchMainTab('cabins'); }
 
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         //  CABINS
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         function renderCabinCats() {
             const cats = ['Barchasi', 'mini', 'standard', 'vip'];
             const catList = document.getElementById('cabinCatList');
             catList.innerHTML = cats.map(c =>
-                `<div class="cat ${cabinCat === c ? 'active' : ''}" onclick="switchCabinCat('${c}')">
-                    ${c === 'Barchasi' ? '🏠 Barchasi' : c.charAt(0).toUpperCase() + c.slice(1)}
-                </div>`
+                `<div class="cat ${cabinCat === c ? 'active' : ''}" onclick="switchCabinCat('${c}')">${c === 'Barchasi' ? 'Barchasi' : c.charAt(0).toUpperCase() + c.slice(1)}</div>`
             ).join('');
         }
 
@@ -2061,210 +2855,247 @@
             renderCabins();
         }
 
+        function getRoomStatus(type, roomNum) {
+            const statuses = roomStatus[type] || {};
+            if (Array.isArray(statuses)) {
+                const idx = roomNum - 1;
+                if (idx >= 0 && idx < statuses.length) {
+                    return statuses[idx] || 'bo\'sh';
+                }
+                return 'bo\'sh';
+            }
+            if (typeof statuses === 'object') {
+                return statuses[roomNum] || 'bo\'sh';
+            }
+            return 'bo\'sh';
+        }
+
         function renderCabins() {
             const filtered = cabins.filter(c => {
                 const mc = cabinCat === 'Barchasi' || c.type === cabinCat;
                 const ms = c.name.toLowerCase().includes(searchCabin);
                 return mc && ms;
             });
-
             const grid = document.getElementById('cabinGrid');
             if (filtered.length === 0) {
                 grid.innerHTML =
                     `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);">Kabinalar topilmadi</div>`;
                 return;
             }
-
             grid.innerHTML = filtered.map(c => {
                 const inCart = cart.some(item => item.type === 'cabin' && item.id === c.id);
+                const status = getRoomStatus(c.type, c.room);
+                const isFree = status === 'bo\'sh';
                 const img = c.image || '';
-                const status = getRoomStatus(c.type);
+                const pano = c.panorama || DEFAULT_PANORAMA;
                 return `<div class="vcard" onclick="openCabinDetail('${c.id}')">
                             <img src="${img}" class="vthumb" loading="lazy" onerror="this.style.background='var(--card2)';this.src=''">
                             <div class="badge-row">
-                                <div class="price-badge">${c.price.toLocaleString()} so'm</div>
-                                <div class="type-badge">${c.emoji || ''} ${c.type}</div>
+                                <div class="price-badge">${c.price.toLocaleString()} UZS</div>
+                                <div class="type-badge">${c.type}</div>
                             </div>
                             <div class="vbody">
-                                <span class="stock-lbl">${status || '🟢 Mavjud'}</span>
+                                <span class="stock-lbl ${isFree ? 'available' : 'booked'}">${isFree ? 'Mavjud' : 'Band'}</span>
                                 <div class="vtitle">${c.name}</div>
-                                <div class="vsub">${c.capacity}</div>
+                                <div class="vsub">Xona ${c.room} • ${c.capacity}</div>
                                 <div class="btn-row" onclick="event.stopPropagation();">
-                                    <button class="abtn abtn-book" onclick="openCabinDetail('${c.id}')">
-                                        <span class="btn-emoji">📋</span>
-                                    </button>
-                                    ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${c.id}','cabin')">
-                                        <span class="btn-emoji">❌</span>
-                                    </button>` : `<button class="abtn abtn-add" onclick="quickBook('${c.id}')" ${status && status.includes('Band') ? 'disabled' : ''}>
-                                        <span class="btn-emoji">➕</span> Bron
-                                    </button>`}
+                                    <button class="abtn abtn-book" onclick="openCabinDetail('${c.id}')">Ko'rish</button>
+                                        
+                                    ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${c.id}','cabin')">Olib tashlash</button>` : 
+                                    `<button class="abtn abtn-add" onclick="quickBook('${c.id}')" ${!isFree ? 'disabled' : ''}>Bron</button>`}
                                 </div>
                             </div>
                         </div>`;
             }).join('');
         }
 
-        function getRoomStatus(type) {
-            const statuses = {
-                'mini': roomStatus?.mini || [],
-                'standard': roomStatus?.standard || {},
-                'vip': roomStatus?.vip || {}
-            };
-
-            if (type === 'mini') {
-                const arr = statuses.mini || [];
-                const available = arr.filter(s => s === 'bo\'sh' || s === null || s === undefined).length;
-                const total = arr.length || 0;
-                if (available > 0) return `🟢 Mavjud: ${available} ta`;
-                return `🔴 Band`;
-            }
-
-            const obj = statuses[type] || {};
-            const rooms = Object.values(obj);
-            const available = rooms.filter(s => s === 'bo\'sh' || s === null || s === undefined).length;
-            const total = rooms.length || 0;
-            if (available > 0) return `🟢 Mavjud: ${available} ta`;
-            return `🔴 Band`;
-        }
-
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         //  CABIN DETAIL
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         function openCabinDetail(id) {
             const cabin = cabins.find(c => c.id === id);
             if (!cabin) return;
-
-            const imagesHTML = [cabin.image].filter(Boolean).map(img =>
-                `<img src="${img}" onclick="document.getElementById('sheetMainImg').src='${img}';event.stopPropagation();" loading="lazy">`
-            ).join('') || '<span class="text-muted fs-12">Rasm mavjud emas</span>';
-
-            const inCart = cart.some(item => item.type === 'cabin' && item.id === cabin.id);
-            const status = getRoomStatus(cabin.type);
-
+            const status = getRoomStatus(cabin.type, cabin.room);
+            const isFree = status === 'bo\'sh';
+            const inCart = cart.some(item => item.type === 'cabin' && item.id === id);
+            const pano = cabin.panorama || DEFAULT_PANORAMA;
             document.getElementById('mBody').innerHTML = `
-                        <button class="sheet-close" onclick="closeM()"><i class="material-icons-round" style="font-size:16px;">close</i></button>
+                        <button class="sheet-close" onclick="closeModal()"><span class="mat-icon">close</span></button>
                         <div style="padding:0 16px;">
-                            <div class="sheet-image-main" style="position:relative;">
-                                <img id="sheetMainImg" src="${cabin.image}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);" onerror="this.style.background='var(--card2)'">
-                            </div>
-                            <div class="sheet-image-carousel">${imagesHTML}</div>
+                            <img src="${cabin.image || ''}" class="sheet-image-main" onerror="this.style.background='var(--card2)';this.src=''">
                         </div>
                         <div class="sheet-body">
-                            <span class="type-badge" style="display:inline-block;margin-bottom:4px;">${cabin.emoji || ''} ${cabin.type.toUpperCase()}</span>
+                            <div class="type-badge" style="display:inline-block;margin-bottom:4px;">${cabin.type.toUpperCase()}</div>
                             <div class="sheet-title">${cabin.name}</div>
-                            <div class="sheet-price">${cabin.price.toLocaleString()} so'm / soat</div>
-                            <div class="sheet-desc">${cabin.equipment || '—'}</div>
-                            <div><span class="fw-700 fs-12">Holati: </span><span style="color:${status.includes('Mavjud') ? 'var(--green)' : 'var(--red)'};">${status}</span></div>
-                            <div><span class="fw-700 fs-12">Sig'imi: </span><span>${cabin.capacity}</span></div>
-
-                            <div style="margin:10px 0 4px;font-weight:600;font-size:13px;">📅 Bron qilish</div>
+                            <div class="sheet-price">${cabin.price.toLocaleString()} UZS / soat</div>
+                            <div class="sheet-desc">Xona ${cabin.room} • ${cabin.capacity} • ${cabin.equipment}</div>
+                            <div style="margin:4px 0 8px;">
+                                <span style="font-weight:600;font-size:12px;">Holati: </span>
+                                <span style="color:${isFree ? 'var(--green)' : 'var(--red)'};font-weight:600;">
+                                    ${isFree ? 'Mavjud' : 'Band'}
+                                </span>
+                            </div>
+                            <div style="margin:10px 0 6px;font-weight:600;font-size:13px;">Bron qilish</div>
                             <div class="sheet-book-row">
-                                <div class="field"><label>📅 Sana</label><input type="date" id="bookDate" value="${new Date().toISOString().slice(0,10)}"></div>
-                                <div class="field"><label>⏰ Vaqt</label><input type="time" id="bookTime" value="14:00"></div>
-                                <div class="field"><label>⏳ Davomiylik</label>
+                                <div class="field"><label>Sana</label><input type="date" id="bookDate" value="${new Date().toISOString().slice(0,10)}"></div>
+                                <div class="field"><label>Vaqt</label><input type="time" id="bookTime" value="14:00"></div>
+                                <div class="field"><label>Davomiylik (soat)</label>
                                     <select id="bookDuration">
-                                        <option value="1">1 soat</option>
-                                        <option value="2" selected>2 soat</option>
-                                        <option value="3">3 soat</option>
-                                        <option value="4">4 soat</option>
-                                        <option value="6">6 soat</option>
-                                        <option value="8">8 soat</option>
-                                        <option value="12">12 soat</option>
-                                        <option value="24">24 soat</option>
+                                        <option value="1">1</option>
+                                        <option value="2" selected>2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8">8</option>
+                                        <option value="12">12</option>
+                                        <option value="24">24</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="sheet-actions">
-                                ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${cabin.id}','cabin');closeM();">
-                                    <span class="btn-emoji">❌</span> Savatdan olish
-                                </button>` : `<button class="abtn abtn-add" onclick="bookCabin('${cabin.id}')" ${status.includes('Band') ? 'disabled' : ''}>
-                                    <span class="btn-emoji">✅</span> Bron qilish
-                                </button>`}
+                                <button class="abtn abtn-outline" onclick="openPanorama('${pano}')">360° VR ko'rish</button>
+                                ${inCart ? 
+                                    `<button class="abtn abtn-remove" onclick="removeFromCart('${cabin.id}','cabin');closeModal();">Savatdan olish</button>` :
+                                    `<button class="abtn abtn-add" onclick="bookCabin('${cabin.id}')" ${!isFree ? 'disabled' : ''}>Bron qilish</button>`
+                                }
                             </div>
-                            <div style="font-size:11px;color:var(--muted);margin-top:4px;">💡 Bron qilgandan so'ng savatga qo'shiladi</div>
+                            <div style="font-size:11px;color:var(--muted);margin-top:4px;">Bron qilgandan so'ng savatga qo'shiladi</div>
                         </div>
                     `;
             document.getElementById('fullModal').classList.add('show');
         }
 
-        function closeM() { document.getElementById('fullModal').classList.remove('show'); }
+        function closeModal() {
+            document.getElementById('fullModal').classList.remove('show');
+        }
 
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
+        //  360 / VR PANORAMA VIEW
+        // ═══════════════════════════════════════════════════════════════
+        function openPanorama(url) {
+            if (!url) url = DEFAULT_PANORAMA;
+            document.getElementById('panoramaSky').setAttribute('src', url);
+            document.getElementById('panoramaModal').classList.add('show');
+        }
+
+        function closePanorama() {
+            document.getElementById('panoramaModal').classList.remove('show');
+            document.getElementById('panoramaSky').setAttribute('src', '');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  BOOKING CONFLICT CHECK
+        // ═══════════════════════════════════════════════════════════════
+        function timeToMinutes(t) {
+            const [h, m] = String(t || '0:0').split(':').map(Number);
+            return (h || 0) * 60 + (m || 0);
+        }
+
+        function timesOverlap(timeA, durationA, timeB, durationB) {
+            const aStart = timeToMinutes(timeA);
+            const aEnd = aStart + (parseFloat(durationA) || 0) * 60;
+            const bStart = timeToMinutes(timeB);
+            const bEnd = bStart + (parseFloat(durationB) || 0) * 60;
+            return aStart < bEnd && bStart < aEnd;
+        }
+
+        async function hasBookingConflict(type, room, date, time, duration) {
+            await loadBookings();
+            return Object.values(bookings).some(b =>
+                b.cabinType === type &&
+                String(b.cabinRoom) === String(room) &&
+                b.date === date &&
+                (b.status === 'band' || b.status === 'kutilmoqda') &&
+                timesOverlap(b.time, b.duration, time, duration)
+            );
+        }
+
+        // ═══════════════════════════════════════════════════════════════
         //  BOOK CABIN
-        // ============================================================
-        function bookCabin(id) {
+        // ═══════════════════════════════════════════════════════════════
+        async function bookCabin(id) {
             const cabin = cabins.find(c => c.id === id);
             if (!cabin) return;
-
             const date = document.getElementById('bookDate')?.value || new Date().toISOString().slice(0, 10);
             const time = document.getElementById('bookTime')?.value || '14:00';
             const duration = parseInt(document.getElementById('bookDuration')?.value || 2);
-
             if (cart.some(item => item.type === 'cabin' && item.id === id)) {
-                showToast('Bu kabina allaqachon savatda!', 'warning');
+                showToast('Bu kabina savatda!', 'warning');
                 return;
             }
-
-            const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price };
+            if (await hasBookingConflict(cabin.type, cabin.room, date, time, duration)) {
+                showToast('Bu xona shu sana va vaqtda allaqachon band. Boshqa vaqt tanlang.', 'warning');
+                openCabinDetail(id);
+                return;
+            }
+            const bookingRecord = saveBookingRequest(cabin, date, time, duration);
+            const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
+                bookingId: bookingRecord.id };
             cart.push({ type: 'cabin', id: id, qty: 1, bookingData: bookingData, price: cabin.price * duration });
-
-            sendCabinBooking(cabin, bookingData);
-
+            updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
             renderCabins();
             renderCart();
-            updateCartBadge();
+            updateBadges();
             updateProfile();
-            closeM();
+            renderAvailability();
+            refreshBookingsUI();
+            closeModal();
             switchMainTab('savad');
-            showToast(`✅ "${cabin.name}" bron qilindi!`, 'success');
+            showToast("Bron so'rovi yuborildi. Admin tasdiqlashini kuting.", 'success');
         }
 
-        function quickBook(id) {
+        async function quickBook(id) {
             const cabin = cabins.find(c => c.id === id);
             if (!cabin) return;
-
             if (cart.some(item => item.type === 'cabin' && item.id === id)) {
-                showToast('Bu kabina allaqachon savatda!', 'warning');
+                showToast('Bu kabina savatda!', 'warning');
                 return;
             }
-
             const date = new Date().toISOString().slice(0, 10);
             const time = '14:00';
             const duration = 2;
-            const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price };
+            if (await hasBookingConflict(cabin.type, cabin.room, date, time, duration)) {
+                showToast('Bu xona shu sana va vaqtda allaqachon band. Boshqa vaqt tanlash uchun kabinani oching.', 'warning');
+                openCabinDetail(id);
+                return;
+            }
+            const bookingRecord = saveBookingRequest(cabin, date, time, duration);
+            const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
+                bookingId: bookingRecord.id };
             cart.push({ type: 'cabin', id: id, qty: 1, bookingData: bookingData, price: cabin.price * duration });
-
-            sendCabinBooking(cabin, bookingData);
-
+            updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
             renderCabins();
             renderCart();
-            updateCartBadge();
+            updateBadges();
             updateProfile();
-            showToast(`✅ "${cabin.name}" bron qilindi!`, 'success');
+            renderAvailability();
+            refreshBookingsUI();
+            showToast("Bron so'rovi yuborildi. Admin tasdiqlashini kuting.", 'success');
         }
 
-        function sendCabinBooking(cabin, bookingData) {
-            const msg =
-                `🏠 YANGI KABINA BRONI\n\n` +
-                `📌 Kabina: ${cabin.name}\n` +
-                `📅 Sana: ${bookingData.date}\n` +
-                `⏰ Vaqt: ${bookingData.time}\n` +
-                `⏳ Davomiylik: ${bookingData.duration} soat\n` +
-                `💰 Narx: ${(cabin.price * bookingData.duration).toLocaleString()} so'm\n` +
-                `👤 Foydalanuvchi: ${userName}\n` +
-                `🆔 ID: ${tgUserId || 'Anonim'}`;
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
+        function updateRoomStatus(type, room, status) {
+            if (!roomStatus[type]) {
+                if (type === 'mini') roomStatus[type] = [];
+                else roomStatus[type] = {};
+            }
+            if (Array.isArray(roomStatus[type])) {
+                const idx = room - 1;
+                if (idx >= 0) roomStatus[type][idx] = status;
+            } else if (typeof roomStatus[type] === 'object') {
+                roomStatus[type][room] = status;
+            }
+            const patch = {};
+            patch[type] = roomStatus[type];
+            fetch(FB_URL + 'room_status.json', {
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CABIN_BOOKING_CHAT_ID, text: msg })
-            }).catch(e => console.warn('Telegram send error:', e));
+                body: JSON.stringify(patch)
+            }).catch(e => console.warn('Firebase update error:', e));
         }
 
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         //  MENU
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         function renderMenuCats() {
             const cats = ['Barchasi', ...new Set(menuItems.map(m => m.category))];
             const catList = document.getElementById('menuCatList');
@@ -2290,31 +3121,25 @@
                 const ms = m.name.toLowerCase().includes(searchMenu);
                 return mc && ms;
             });
-
             const grid = document.getElementById('menuGrid');
             if (filtered.length === 0) {
                 grid.innerHTML =
-                    `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);">Menyuda mahsulot topilmadi</div>`;
+                    `<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--muted);">Menyu topilmadi</div>`;
                 return;
             }
-
             grid.innerHTML = filtered.map(m => {
                 const inCart = cart.some(item => item.type === 'menu' && item.id === m.id);
                 return `<div class="vcard">
                             <img src="${m.image}" class="vthumb" loading="lazy" onerror="this.style.background='var(--card2)';this.src=''">
                             <div class="badge-row">
-                                <div class="price-badge">${m.price > 0 ? m.price.toLocaleString() + ' so\'m' : '—'}</div>
+                                <div class="price-badge">${m.price > 0 ? m.price.toLocaleString() + ' UZS' : '—'}</div>
                                 <div class="type-badge" style="background:var(--gold);color:#111;">${m.category}</div>
                             </div>
                             <div class="vbody">
                                 <div class="vtitle">${m.name}</div>
                                 <div class="vsub">${m.desc || ''}</div>
                                 <div class="btn-row">
-                                    ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${m.id}','menu')">
-                                        <span class="btn-emoji">❌</span> Olib tashlash
-                                    </button>` : `<button class="abtn abtn-add" onclick="addMenu('${m.id}')">
-                                        <span class="btn-emoji">➕</span> Qo'shish
-                                    </button>`}
+                                    ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${m.id}','menu')">Olib tashlash</button>` : `<button class="abtn abtn-add" onclick="addMenu('${m.id}')">Qoshish</button>`}
                                     ${inCart ? `<span style="font-size:10px;font-weight:600;color:var(--muted);padding:2px 6px;">${cart.find(i => i.type === 'menu' && i.id === m.id)?.qty || 0} ta</span>` : ''}
                                 </div>
                             </div>
@@ -2325,7 +3150,6 @@
         function addMenu(id) {
             const item = menuItems.find(m => m.id === id);
             if (!item) return;
-
             const existing = cart.find(i => i.type === 'menu' && i.id === id);
             if (existing) {
                 existing.qty += 1;
@@ -2333,44 +3157,46 @@
                 cart.push({ type: 'menu', id: id, qty: 1, price: item.price, title: item.name, category: item
                         .category });
             }
-
             renderMenu();
             renderCart();
-            updateCartBadge();
+            updateBadges();
             updateProfile();
-            showToast(`✅ "${item.name}" savatga qo'shildi`, 'success');
+            showToast(item.name + ' savatga qoshildi', 'success');
         }
 
-        // ============================================================
-        //  REMOVE FROM CART
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
+        //  CART
+        // ═══════════════════════════════════════════════════════════════
         function removeFromCart(id, type) {
             const idx = cart.findIndex(item => item.type === type && item.id === id);
             if (idx === -1) return;
+            const item = cart[idx];
+            if (type === 'cabin') {
+                const cabin = cabins.find(c => c.id === id);
+                if (cabin) {
+                    updateRoomStatus(cabin.type, cabin.room, 'bo\'sh');
+                    renderAvailability();
+                }
+            }
             cart.splice(idx, 1);
             renderCabins();
             renderMenu();
             renderCart();
-            updateCartBadge();
+            updateBadges();
             updateProfile();
-            showToast('🗑️ O\'chirildi', 'info');
+            showToast('Olib tashlandi', 'info');
         }
 
-        // ============================================================
-        //  CART
-        // ============================================================
         function renderCart() {
             const list = document.getElementById('cartList');
             const totalEl = document.getElementById('cartTotal');
             const amountEl = document.getElementById('cartTotalAmount');
-
             if (cart.length === 0) {
                 list.innerHTML =
-                    `<div class="cart-empty"><i class="material-icons-round">shopping_cart</i>Savatingiz bo'sh<br><span class="text-muted fs-12">Kabinalar va menyu mahsulotlari qo'shing</span></div>`;
+                    `<div class="cart-empty"><span class="mat-icon">shopping_cart</span>Savatingiz bosh</div>`;
                 totalEl.style.display = 'none';
                 return;
             }
-
             let total = 0;
             let html = '';
             cart.forEach((item) => {
@@ -2378,28 +3204,24 @@
                 const qty = item.qty || 1;
                 const subtotal = price * qty;
                 total += subtotal;
-
                 const img = item.type === 'cabin' ?
                     cabins.find(c => c.id === item.id)?.image || '' :
                     menuItems.find(m => m.id === item.id)?.image || '';
-
                 if (item.type === 'cabin') {
                     const bd = item.bookingData || {};
-                    html += `<div class="cart-item" onclick="openCabinDetail('${item.id}')">
+                    html += `<div class="cart-item">
                                 <div class="item-row">
                                     <img src="${img}" class="cart-thumb" onerror="this.style.background='var(--card2)'">
                                     <div style="flex:1;min-width:0;">
-                                        <span class="badge-type">🏠 Kabina</span>
+                                        <span class="badge-type">Kabina</span>
                                         <div class="title">${bd.cabinName || item.id}</div>
-                                        <div class="sub">📅 ${bd.date || '—'} ${bd.time || ''} • ⏳ ${bd.duration || 1} soat</div>
+                                        <div class="sub">${bd.date || '—'} ${bd.time || ''} • ${bd.duration || 1} soat</div>
                                     </div>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;margin-top:4px;padding-left:54px;">
-                                    <span>${price.toLocaleString()} so'm × ${qty}</span>
-                                    <span class="price">${subtotal.toLocaleString()} so'm</span>
-                                    <button class="remove-btn" onclick="event.stopPropagation();removeFromCart('${item.id}','cabin')">
-                                        <span class="btn-emoji">❌</span>
-                                    </button>
+                                    <span>${price.toLocaleString()} UZS x ${qty}</span>
+                                    <span class="price">${subtotal.toLocaleString()} UZS</span>
+                                    <button class="remove-btn" onclick="removeFromCart('${item.id}','cabin')">x</button>
                                 </div>
                             </div>`;
                 } else {
@@ -2407,183 +3229,166 @@
                                 <div class="item-row">
                                     <img src="${img}" class="cart-thumb" onerror="this.style.background='var(--card2)'">
                                     <div style="flex:1;min-width:0;">
-                                        <span class="badge-type" style="background:var(--gold);">🍽️ ${item.category || 'Menyu'}</span>
+                                        <span class="badge-type" style="background:var(--gold);">${item.category || 'Menyu'}</span>
                                         <div class="title">${item.title || item.id}</div>
-                                        <div class="sub">${price.toLocaleString()} so'm</div>
                                     </div>
                                 </div>
                                 <div style="display:flex;justify-content:space-between;margin-top:4px;padding-left:54px;">
-                                    <span>${price.toLocaleString()} so'm × ${qty}</span>
-                                    <span class="price">${subtotal.toLocaleString()} so'm</span>
-                                    <button class="remove-btn" onclick="event.stopPropagation();removeFromCart('${item.id}','menu')">
-                                        <span class="btn-emoji">❌</span>
-                                    </button>
+                                    <span>${price.toLocaleString()} UZS x ${qty}</span>
+                                    <span class="price">${subtotal.toLocaleString()} UZS</span>
+                                    <button class="remove-btn" onclick="removeFromCart('${item.id}','menu')">x</button>
                                 </div>
                             </div>`;
                 }
             });
-
             list.innerHTML = html;
             totalEl.style.display = 'block';
-            amountEl.textContent = total.toLocaleString() + ' so\'m';
-            paymentTotal = total;
+            amountEl.textContent = total.toLocaleString() + ' UZS';
         }
 
-        function updateCartBadge() {
-            const count = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-            const badge1 = document.getElementById('navCartBadge');
-            const badge2 = document.getElementById('cartTabBadge');
-            const badge3 = document.getElementById('headerCartBadge');
-            if (count > 0) {
-                [badge1, badge2, badge3].forEach(b => { if (b) { b.style.display = 'flex';
-                        b.textContent = count; } });
-            } else {
-                [badge1, badge2, badge3].forEach(b => { if (b) b.style.display = 'none'; });
-            }
+        function updateBadges() {
+            const count = cart.length;
+            const badges = [
+                document.getElementById('headerCartBadge'),
+                document.getElementById('cartTabBadge'),
+                document.getElementById('navCartBadge')
+            ];
+            badges.forEach(b => {
+                if (b) {
+                    if (count > 0) {
+                        b.style.display = 'flex';
+                        b.textContent = count;
+                    } else {
+                        b.style.display = 'none';
+                    }
+                }
+            });
         }
 
-        // ============================================================
-        //  PROFILE
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
+        //  PROFILE & AVAILABILITY
+        // ═══════════════════════════════════════════════════════════════
         function updateProfile() {
-            document.getElementById('profileName').textContent = userName;
-            document.getElementById('profileId').textContent = tgUserId || '—';
+            document.getElementById('profileName').textContent = user ? user.name : 'Mehmon';
+            document.getElementById('profileId').textContent = user ? user.id : '—';
             const bookings = cart.filter(item => item.type === 'cabin').length;
             document.getElementById('profileBookings').textContent = bookings;
             document.getElementById('profileCart').textContent = cart.length;
         }
 
-        // ============================================================
-        //  PAYMENT
-        // ============================================================
-        function openPaymentSystem() {
-            if (cart.length === 0) { showToast('Savatingiz bo\'sh!', 'warning'); return; }
-            const total = cart.reduce((sum, item) => sum + (item.price || 0) * (item.qty || 1), 0);
-            paymentTotal = total;
-            paymentPaid = 0;
-            paymentComplete = false;
-
-            document.getElementById('paymentSystem').style.display = 'block';
-            document.getElementById('savadPage').style.display = 'none';
-            document.querySelectorAll('.main-tab').forEach(el => el.classList.remove('active'));
-            updatePaymentUI();
-            document.getElementById('payResult').style.display = 'none';
-            document.getElementById('payStatus').textContent = '';
-            const sc = document.getElementById('scrollContent');
-            if (sc) sc.scrollTop = 0;
+        function renderAvailability() {
+            const container = document.getElementById('availabilityContainer');
+            let html = '';
+            cabins.forEach(c => {
+                const status = getRoomStatus(c.type, c.room);
+                const isFree = status === 'bo\'sh';
+                html += `<div class="avail-item">
+                            <div class="room">${c.name}</div>
+                            <div class="status ${isFree ? 'free' : 'booked'}">${isFree ? 'Bo\'sh' : 'Band'}</div>
+                        </div>`;
+            });
+            container.innerHTML = html;
         }
 
-        function closePaymentSystem() {
-            document.getElementById('paymentSystem').style.display = 'none';
-            switchMainTab('savad');
-        }
-
-        function updatePaymentUI() {
-            const remaining = paymentTotal - paymentPaid;
-            const percent = paymentTotal > 0 ? (paymentPaid / paymentTotal) * 100 : 0;
-            document.getElementById('payTotalAmount').textContent = paymentTotal.toLocaleString() + ' so\'m';
-            document.getElementById('payRemaining').textContent = remaining.toLocaleString() + ' so\'m';
-            document.getElementById('payPercent').textContent = Math.round(percent) + '%';
-            document.getElementById('payProgress').style.width = Math.min(percent, 100) + '%';
-            document.getElementById('payPaidText').textContent = 'To\'landi: ' + paymentPaid.toLocaleString() + ' so\'m';
-            document.getElementById('payRemainingText').textContent = 'Qoldi: ' + remaining.toLocaleString() + ' so\'m';
-            document.getElementById('payRemaining').style.color = remaining <= 0 ? 'var(--green)' : 'var(--red)';
-        }
-
-        function startClickPayment() {
-            if (paymentComplete) { showToast('To\'lov allaqachon yakunlangan!', 'success'); return; }
-            const amount = paymentTotal - paymentPaid;
-            if (amount <= 0) { showToast('To\'lov to\'liq!', 'success'); return; }
-
-            document.getElementById('payStatus').textContent = '⏳ Click orqali to\'lov...';
-            document.getElementById('payStatus').style.color = 'var(--click-blue)';
-
-            setTimeout(() => {
-                paymentPaid += amount;
-                if (paymentPaid >= paymentTotal) {
-                    paymentPaid = paymentTotal;
-                    paymentComplete = true;
-                    document.getElementById('payResult').className = 'success-box';
-                    document.getElementById('payResultContent').innerHTML = `
-                                <div style="color:var(--green);font-size:16px;font-weight:700;">
-                                    <span class="btn-emoji">✅</span> To'lov yakunlandi!
-                                </div>
-                                <div>${amount.toLocaleString()} so'm qabul qilindi.</div>
-                                <button onclick="finishPayment()" class="abtn abtn-add" style="margin-top:10px;padding:10px;">
-                                    <span class="btn-emoji">✅</span> Buyurtmani tasdiqlash
-                                </button>
-                            `;
-                    document.getElementById('payResult').style.display = 'block';
-                    document.getElementById('payStatus').textContent = '✅ To\'lov muvaffaqiyatli!';
-                    document.getElementById('payStatus').style.color = 'var(--green)';
-                } else {
-                    document.getElementById('payResult').className = 'warning-box';
-                    document.getElementById('payResultContent').innerHTML = `
-                                <div style="color:var(--warning);font-size:16px;font-weight:700;">
-                                    <span class="btn-emoji">⚠️</span> Qisman to'lov
-                                </div>
-                                <div>${amount.toLocaleString()} so'm qabul qilindi.</div>
-                                <div style="color:var(--red);font-weight:600;margin-top:6px;">Qolgan: ${(paymentTotal - paymentPaid).toLocaleString()} so'm</div>
-                                <button onclick="startClickPayment()" class="click-btn" style="margin-top:8px;">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrt8NaD6Y7W7wLSqAQ3Bf6rjCsJk7J6Q3A78Xg17ovcw&s=10" alt="Click" style="width:22px;height:22px;">
-                                    Yana Click
-                                </button>
-                            `;
-                    document.getElementById('payResult').style.display = 'block';
-                    document.getElementById('payStatus').textContent = '⚠️ Qisman to\'lov';
-                    document.getElementById('payStatus').style.color = 'var(--warning)';
-                }
-                updatePaymentUI();
-            }, 2000);
-        }
-
-        function finishPayment() {
-            if (!paymentComplete) { showToast('To\'lov to\'liq yakunlanmagan!', 'warning'); return; }
-
-            sendOrderToTelegram();
-
-            cart = [];
-            renderCart();
-            updateCartBadge();
-            updateProfile();
-            document.getElementById('paymentSystem').style.display = 'none';
-            switchMainTab('cabins');
-            showToast(`✅ Buyurtma qabul qilindi!`, 'success');
-            paymentPaid = 0;
-            paymentComplete = false;
-            paymentTotal = 0;
-        }
-
-        function sendOrderToTelegram() {
-            let msg =
-                `🛒 YANGI BUYURTMA\n\n` +
-                `👤 Foydalanuvchi: ${userName}\n` +
-                `🆔 ID: ${tgUserId || 'Anonim'}\n` +
-                `💰 Umumiy: ${paymentTotal.toLocaleString()} so'm\n\n` +
-                `📦 Mahsulotlar:\n`;
-
-            cart.forEach((item, idx) => {
-                const price = item.price || 0;
-                const qty = item.qty || 1;
-                if (item.type === 'cabin') {
+        // ═══════════════════════════════════════════════════════════════
+        //  PLACE ORDER
+        // ═══════════════════════════════════════════════════════════════
+        function placeOrder() {
+            if (!user) {
+                showToast('Iltimos, qaytadan kiriting', 'warning');
+                return;
+            }
+            if (cart.length === 0) {
+                showToast('Savatingiz bosh!', 'warning');
+                return;
+            }
+            const orderId = 'ORD-' + Date.now().toString().slice(-6) + '-' + String(Math.random().toString(36).slice(-4))
+                .toUpperCase();
+            let msg = 'YANGI BUYURTMA\n';
+            msg += '------------------------\n';
+            msg += 'Raqam: ' + orderId + '\n';
+            msg += 'Foydalanuvchi: ' + (user.name || 'Mehmon') + '\n';
+            msg += 'ID: ' + (user.id || '—') + '\n';
+            if (user.username) msg += 'Username: @' + user.username + '\n';
+            msg += '------------------------\n';
+            const cabinItems = cart.filter(item => item.type === 'cabin');
+            const menuItems = cart.filter(item => item.type === 'menu');
+            if (cabinItems.length > 0) {
+                msg += 'KABINALAR:\n';
+                cabinItems.forEach((item, i) => {
                     const bd = item.bookingData || {};
                     msg +=
-                        `${idx+1}. 🏠 ${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${(price * qty).toLocaleString()} so'm\n`;
-                } else {
-                    msg += `${idx+1}. 🍽️ ${item.title || item.id} × ${qty} — ${(price * qty).toLocaleString()} so'm\n`;
-                }
-            });
-
+                        `${i+1}. ${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${item.price.toLocaleString()} UZS\n`;
+                });
+            }
+            if (menuItems.length > 0) {
+                msg += 'MENYU:\n';
+                menuItems.forEach((item, i) => {
+                    msg += `${i+1}. ${item.title || item.id} x ${item.qty} — ${(item.price * item.qty).toLocaleString()} UZS\n`;
+                });
+            }
+            let total = 0;
+            cart.forEach(item => total += (item.price || 0) * (item.qty || 1));
+            msg += '------------------------\n';
+            msg += 'JAMI: ' + total.toLocaleString() + ' UZS';
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: MENU_ORDERS_CHAT_ID, text: msg })
             }).catch(e => console.warn('Telegram send error:', e));
+            if (cabinItems.length > 0) {
+                let cabinMsg = 'KABINA BRON\n';
+                cabinMsg += '------------------------\n';
+                cabinMsg += 'Foydalanuvchi: ' + (user.name || 'Mehmon') + '\n';
+                cabinMsg += 'ID: ' + (user.id || '—') + '\n';
+                cabinMsg += '------------------------\n';
+                cabinItems.forEach((item) => {
+                    const bd = item.bookingData || {};
+                    cabinMsg +=
+                        `${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${item.price.toLocaleString()} UZS\n`;
+                });
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CABIN_BOOKING_CHAT_ID, text: cabinMsg })
+                }).catch(e => console.warn('Telegram send error:', e));
+            }
+            cart = [];
+            renderCabins();
+            renderMenu();
+            renderCart();
+            updateBadges();
+            updateProfile();
+            renderAvailability();
+            showQR(orderId);
+            showToast('Buyurtma qabul qilindi!', 'success');
         }
 
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
+        //  QR CODE
+        // ═══════════════════════════════════════════════════════════════
+        function showQR(orderId) {
+            document.getElementById('qrOrderId').textContent = orderId;
+            const container = document.getElementById('qrCodeContainer');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: orderId,
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            document.getElementById('qrModal').classList.add('show');
+        }
+
+        function closeQR() {
+            document.getElementById('qrModal').classList.remove('show');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
         //  TOAST
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         function showToast(msg, type) {
             const existing = document.querySelector('.toast');
             if (existing) existing.remove();
@@ -2597,108 +3402,565 @@
             }, 3000);
         }
 
-        // ============================================================
-        //  AI
-        // ============================================================
-        function toggleAI() { document.getElementById('aiWin').classList.toggle('show'); }
-
-        async function sendMsg() {
-            const inp = document.getElementById('aiInp');
-            if (!inp.value.trim()) return;
-            const userText = inp.value.trim();
-            addChatMsg(userText, 'user');
-            inp.value = '';
-
-            const bazaStr = JSON.stringify({
-                cabins: cabins.map(c => ({ id: c.id, name: c.name, type: c.type, price: c.price })),
-                menu: menuItems.map(m => ({ id: m.id, name: m.name, category: m.category, price: m.price }))
-            });
-
-            const sysPrompt =
-                `Siz Plastasion Club assistentsi. Faqat o'zbek tilida javob bering. Kabinalar va menyu haqida maslahat bering. Mavjud ma'lumotlar: ${bazaStr}. Qisqa va aniq gapiring.`;
-
-            try {
-                const res = await fetch('https://freeai.logise1123.workers.dev/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ model: "llama-3.1-8b-instruct-fast", messages: [{ role: 'system',
-                            content: sysPrompt }, { role: 'user', content: userText }], temperature: 0.1 })
-                });
-                const data = await res.json();
-                const raw = data.choices[0].message.content.toString().trim();
-                addChatMsg(raw, 'bot');
-            } catch (e) { addChatMsg("Tarmoq xatoligi.", 'bot');
-                console.error(e); }
-        }
-
-        function addChatMsg(text, cls) {
-            const wrap = document.getElementById('aiMsgs');
-            const el = document.createElement('div');
-            el.className = `msg ${cls}`;
-            el.innerText = text;
-            wrap.appendChild(el);
-            wrap.scrollTop = wrap.scrollHeight;
-            return el;
-        }
-
-        // ============================================================
-        //  USER MENU
-        // ============================================================
-        function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('show'); }
-
-        function resetApp() {
-            if (confirm("Barcha ma'lumotlarni qayta yuklash?")) { location.reload(); }
-        }
-
-        // ============================================================
-        //  VR
-        // ============================================================
-        function openVR(url) {
-            const overlay = document.getElementById('vrOverlay');
-            const sky = document.getElementById('vrSky');
-            if (sky) sky.setAttribute('src', url || '');
-            overlay.classList.add('show');
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(() => {});
-            }
-        }
-
-        function closeVR() {
-            document.getElementById('vrOverlay').classList.remove('show');
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-            }
-        }
-
-        // ============================================================
-        //  OFFLINE
-        // ============================================================
-        function updateOnlineStatus() {
-            document.getElementById('offlineBanner').classList.toggle('show', !navigator.onLine);
-        }
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-
-        // ============================================================
+        // ═══════════════════════════════════════════════════════════════
         //  MODAL CLOSE
-        // ============================================================
-        document.getElementById('fullModal').addEventListener('click', function(e) { if (e.target === this) closeM(); });
-
-        // ============================================================
-        //  BOOT
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            autoLoginWithTelegram();
-            setTimeout(() => {
-                document.getElementById('preloader').classList.add('hidden');
-            }, 1000);
-            setTimeout(initApp, 300);
+        // ═══════════════════════════════════════════════════════════════
+        document.getElementById('fullModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
         });
 
-        console.log("✅ Plastasion Club (Premium Emojis) ishga tushdi!");
-        console.log("🔑 Telegram orqali avtomatik kirish");
-        console.log("🏠 Kabinalar va 🍽️ Menyu");
-        console.log("💎 Premium emojilar qo'llab-quvvatlanadi");
+        // ═══════════════════════════════════════════════════════════════
+        //  ENTRANCE ATMOSPHERE SYSTEM
+        // ═══════════════════════════════════════════════════════════════
+        const ATMO_MODES = ['gta', 'fifa', 'psplus_autumn'];
+        const ATMO_CLASS = { gta: 'mode-gta', fifa: 'mode-fifa', psplus_autumn: 'mode-psplus' };
+        const ATMO_LABEL = { gta: 'Open-world · Sunset', fifa: 'Stadium · Kickoff', psplus_autumn: 'Premium · Autumn Evening' };
+        let atmoTimers = [];
+
+        function getAtmospherePref() {
+            return localStorage.getItem('selectedAtmosphere') || 'random';
+        }
+
+        function pickAtmosphere() {
+            const pref = getAtmospherePref();
+            if (pref && pref !== 'random' && ATMO_MODES.includes(pref)) return pref;
+            let idx = parseInt(localStorage.getItem('atmoRotation') || '-1', 10);
+            idx = (isNaN(idx) ? -1 : idx) + 1;
+            if (idx >= ATMO_MODES.length) idx = 0;
+            localStorage.setItem('atmoRotation', String(idx));
+            return ATMO_MODES[idx];
+        }
+
+        function buildAtmoParticles(mode) {
+            const p = document.getElementById('atmoParticles');
+            const leaves = document.getElementById('atmoLeaves');
+            if (p) p.innerHTML = '';
+            if (leaves) leaves.innerHTML = '';
+            if (!p) return;
+            for (let i = 0; i < 16; i++) {
+                const d = document.createElement('div');
+                d.className = 'atmo-particle';
+                d.style.left = (Math.random() * 100) + '%';
+                const dur = 6 + Math.random() * 6;
+                d.style.animationDuration = dur + 's';
+                d.style.animationDelay = (-Math.random() * dur) + 's';
+                const s = 2 + Math.random() * 4;
+                d.style.width = s + 'px';
+                d.style.height = s + 'px';
+                p.appendChild(d);
+            }
+            if (mode === 'psplus_autumn' && leaves) {
+                const leafSvg = '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M12 2c4 3 7 7 7 11 0 4-3 7-7 9-4-2-7-5-7-9 0-4 3-8 7-11z"/></svg>';
+                const colors = ['#d98a3d', '#c85a2a', '#e0a94a', '#a8471f', '#caa14a'];
+                for (let i = 0; i < 12; i++) {
+                    const l = document.createElement('div');
+                    l.className = 'atmo-leaf';
+                    l.style.left = (Math.random() * 100) + '%';
+                    l.style.color = colors[i % colors.length];
+                    const dur = 7 + Math.random() * 6;
+                    l.style.animationDuration = dur + 's';
+                    l.style.animationDelay = (-Math.random() * dur) + 's';
+                    l.style.setProperty('--drift', (Math.random() * 120 - 40) + 'px');
+                    l.innerHTML = leafSvg;
+                    leaves.appendChild(l);
+                }
+            }
+        }
+
+        function runAtmosphereIntro(forceMode) {
+            const intro = document.getElementById('atmoIntro');
+            if (!intro) return;
+            atmoTimers.forEach(clearTimeout);
+            atmoTimers = [];
+            const mode = forceMode || pickAtmosphere();
+            intro.classList.remove('done', 'gone', 'mode-gta', 'mode-fifa', 'mode-psplus', 'ready');
+            intro.classList.add(ATMO_CLASS[mode] || 'mode-gta');
+            const tag = document.getElementById('atmoTag');
+            if (tag) tag.textContent = ATMO_LABEL[mode] || '';
+            setAppBackground(mode);
+            buildAtmoParticles(mode);
+            requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('ready')));
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const hold = reduce ? 900 : 3900;
+            atmoTimers.push(setTimeout(closeAtmosphere, hold));
+        }
+
+        function closeAtmosphere() {
+            const intro = document.getElementById('atmoIntro');
+            if (!intro || intro.classList.contains('done')) return;
+            intro.classList.add('done');
+            atmoTimers.push(setTimeout(() => intro.classList.add('gone'), 850));
+        }
+
+        function setAtmospherePref(mode) {
+            localStorage.setItem('selectedAtmosphere', mode);
+            markActiveAtmoOption();
+            setAppBackground(mode === 'random' ? null : mode);
+            const names = { gta: 'GTA uslubi', fifa: 'FIFA uslubi', psplus_autumn: 'PS Plus · Kuz', random: 'Tasodifiy' };
+            showToast('Atmosfera: ' + (names[mode] || mode), 'success');
+        }
+
+        function markActiveAtmoOption() {
+            const pref = getAtmospherePref();
+            document.querySelectorAll('#atmoOptions .atmo-opt').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-atmo') === pref);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  FIFA-STYLE PACK OPENING
+        // ═══════════════════════════════════════════════════════════════
+        const PK_PLAYERS = [
+            { name: 'R. Aliyev', country: "O'zbekiston", position: 'ST' },
+            { name: 'J. Karim', country: 'Braziliya', position: 'CAM' },
+            { name: 'D. Ferreira', country: 'Portugaliya', position: 'RW' },
+            { name: 'M. Kovac', country: 'Xorvatiya', position: 'CB' },
+            { name: 'A. Toshev', country: "O'zbekiston", position: 'GK' },
+            { name: 'L. Moreau', country: 'Fransiya', position: 'LW' },
+            { name: 'K. Yamada', country: 'Yaponiya', position: 'CM' },
+            { name: 'S. Okafor', country: 'Nigeriya', position: 'ST' }
+        ];
+        const PK_RARITIES = [
+            { id: 'common', label: 'Common', weight: 50, ratingRange: [62, 74] },
+            { id: 'rare', label: 'Rare', weight: 30, ratingRange: [75, 82] },
+            { id: 'special', label: 'Special', weight: 15, ratingRange: [83, 89] },
+            { id: 'legendary', label: 'Legendary', weight: 5, ratingRange: [90, 97] }
+        ];
+        let pkStage = 0;
+        let pkTimers = [];
+        let pkDoneFn = null;
+
+        function getPackIntroPref() {
+            const v = localStorage.getItem('packIntroEnabled');
+            return v === null ? true : v === 'true';
+        }
+
+        function setPackIntroPref(enabled) {
+            localStorage.setItem('packIntroEnabled', enabled ? 'true' : 'false');
+            markActivePackOption();
+            showToast(enabled ? 'Pack ochilishi yoqildi' : "Pack ochilishi o'chirildi", 'success');
+        }
+
+        function markActivePackOption() {
+            const on = getPackIntroPref();
+            document.querySelectorAll('#packOptions .atmo-opt').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-pack') === (on ? 'on' : 'off'));
+            });
+        }
+
+        function getGlassPref() {
+            return localStorage.getItem('glassMode') === 'true';
+        }
+
+        function applyGlass(on) {
+            document.body.classList.toggle('glass-mode', !!on);
+        }
+
+        function setGlassPref(enabled) {
+            localStorage.setItem('glassMode', enabled ? 'true' : 'false');
+            applyGlass(enabled);
+            markActiveGlassOption();
+            showToast(enabled ? 'Shisha rejimi yoqildi' : "Shisha rejimi o'chirildi", 'success');
+        }
+
+        function markActiveGlassOption() {
+            const on = getGlassPref();
+            document.querySelectorAll('#glassOptions .atmo-opt').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-glass') === (on ? 'on' : 'off'));
+            });
+        }
+
+        function pickWeightedRarity() {
+            const total = PK_RARITIES.reduce((s, r) => s + r.weight, 0);
+            let roll = Math.random() * total;
+            for (const r of PK_RARITIES) {
+                if (roll < r.weight) return r;
+                roll -= r.weight;
+            }
+            return PK_RARITIES[0];
+        }
+
+        function buildPkParticles() {
+            const c = document.getElementById('pkParticles');
+            if (!c) return;
+            c.innerHTML = '';
+            for (let i = 0; i < 18; i++) {
+                const d = document.createElement('div');
+                d.className = 'pk-particle';
+                d.style.left = (Math.random() * 100) + '%';
+                const dur = 2.5 + Math.random() * 2.5;
+                d.style.animationDuration = dur + 's';
+                d.style.animationDelay = (-Math.random() * dur) + 's';
+                c.appendChild(d);
+            }
+        }
+
+        function runPackIntro(onDone) {
+            const el = document.getElementById('packIntro');
+            if (!el || !getPackIntroPref()) {
+                if (el) el.classList.add('gone');
+                onDone && onDone();
+                return;
+            }
+            pkTimers.forEach(clearTimeout);
+            pkTimers = [];
+            pkStage = 0;
+            pkDoneFn = onDone;
+            el.classList.remove('gone', 'pk-shown', 'pk-reveal', 'pk-ready');
+            const rarity = pickWeightedRarity();
+            const player = PK_PLAYERS[Math.floor(Math.random() * PK_PLAYERS.length)];
+            const [lo, hi] = rarity.ratingRange;
+            const rating = lo + Math.floor(Math.random() * (hi - lo + 1));
+            el.setAttribute('data-rarity', rarity.id);
+            buildPkParticles();
+            window.__pkFinishReveal = () => {
+                document.getElementById('pkRating').textContent = rating;
+                document.getElementById('pkPosition').textContent = player.position;
+                document.getElementById('pkAvatar').textContent = player.name.charAt(0);
+                document.getElementById('pkName').textContent = player.name;
+                document.getElementById('pkCountry').textContent = player.country;
+                document.getElementById('pkRarityTag').textContent = rarity.label;
+                el.classList.add('pk-reveal');
+            };
+            pkTimers.push(setTimeout(() => el.classList.add('pk-shown'), 250));
+            pkTimers.push(setTimeout(() => el.classList.add('pk-ready'), 900));
+        }
+
+        function advancePackIntro() {
+            const el = document.getElementById('packIntro');
+            if (!el) return;
+            if (pkStage === 0) {
+                pkStage = 1;
+                el.classList.remove('pk-ready');
+                const inner = document.getElementById('pkCardInner');
+                if (inner) inner.classList.add('pk-flip');
+                pkTimers.push(setTimeout(() => { window.__pkFinishReveal && window.__pkFinishReveal(); }, 350));
+                pkTimers.push(setTimeout(() => {
+                    const hint = document.getElementById('pkTapHint');
+                    if (hint) hint.textContent = 'Davom etish uchun bosing';
+                    el.classList.add('pk-ready');
+                }, 900));
+            } else {
+                closePackIntro();
+            }
+        }
+
+        function skipPackIntro() {
+            closePackIntro();
+        }
+
+        function closePackIntro() {
+            const el = document.getElementById('packIntro');
+            pkTimers.forEach(clearTimeout);
+            pkTimers = [];
+            if (el) el.classList.add('gone');
+            const done = pkDoneFn;
+            pkDoneFn = null;
+            done && done();
+        }
+
+        function runEntranceSequence() {
+            runPackIntro(() => runAtmosphereIntro());
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  CLASSIC SVG ICONS
+        // ═══════════════════════════════════════════════════════════════
+        const ICON_SVGS = {
+            home: '<path d="M3 11l9-8 9 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+            restaurant_menu: '<path d="M6 2v8m0 0v12M6 10a2 2 0 0 1-2-2V2m2 8a2 2 0 0 0 2-2V2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 2c-1.7 0-3 1.8-3 4s1.3 4 3 4v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+            shopping_cart: '<circle cx="9" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/><path d="M2.5 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+            person: '<circle cx="12" cy="8" r="3.6" stroke="currentColor" stroke-width="1.7"/><path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+            search: '<circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+            close: '<path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+            logout: '<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8l4 4-4 4M19 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'
+        };
+
+        function replaceMatIcons() {
+            document.querySelectorAll('.mat-icon').forEach(el => {
+                const name = el.textContent.trim();
+                if (ICON_SVGS[name]) {
+                    el.innerHTML =
+                        `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${ICON_SVGS[name]}</svg>`;
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  BOOKINGS (Firebase)
+        // ═══════════════════════════════════════════════════════════════
+        function isAdmin() {
+            return !!(user && ADMIN_IDS.map(String).includes(String(user.id)));
+        }
+
+        function generateBookingId() {
+            return 'BK-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).slice(-4).toUpperCase();
+        }
+
+        async function loadBookings() {
+            try {
+                const resp = await fetch(FB_URL + 'bookings.json');
+                const data = await resp.json();
+                bookings = data || {};
+            } catch (e) {
+                console.warn('Bookings load error:', e);
+            }
+        }
+
+        function saveBookingRequest(cabin, date, time, duration) {
+            const id = generateBookingId();
+            const record = {
+                id,
+                cabinType: cabin.type,
+                cabinRoom: cabin.room,
+                cabinId: cabin.id,
+                cabinName: cabin.name,
+                date,
+                time,
+                duration,
+                price: cabin.price * duration,
+                userId: user ? String(user.id) : 'guest',
+                userName: user ? user.name : 'Mehmon',
+                username: user && user.username ? user.username : '',
+                status: 'kutilmoqda',
+                createdAt: Date.now()
+            };
+            bookings[id] = record;
+            fetch(FB_URL + 'bookings/' + id + '.json', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(record)
+            }).catch(e => console.warn('Booking save error:', e));
+            return record;
+        }
+
+        function approveBooking(id) {
+            const b = bookings[id];
+            if (!b) return;
+            const qrPayload = 'INJOY-' + id + '-' + (b.userName || '').replace(/\s+/g, '');
+            b.status = 'band';
+            b.qrCode = qrPayload;
+            b.approvedAt = Date.now();
+            fetch(FB_URL + 'bookings/' + id + '.json', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'band', qrCode: qrPayload, approvedAt: b.approvedAt })
+            }).catch(e => console.warn('Booking approve error:', e));
+            updateRoomStatus(b.cabinType, b.cabinRoom, 'band');
+            showToast('Bron tasdiqlandi', 'success');
+            refreshBookingsUI();
+        }
+
+        function rejectBooking(id) {
+            const b = bookings[id];
+            if (!b) return;
+            b.status = "bekor qilindi";
+            fetch(FB_URL + 'bookings/' + id + '.json', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: "bekor qilindi" })
+            }).catch(e => console.warn('Booking reject error:', e));
+            updateRoomStatus(b.cabinType, b.cabinRoom, "bo'sh");
+            showToast('Bron rad etildi', 'warning');
+            refreshBookingsUI();
+        }
+
+        function bookingStatusLabel(status) {
+            if (status === 'band') return { text: 'Tasdiqlangan', cls: 'free' };
+            if (status === 'kutilmoqda') return { text: 'Kutilmoqda', cls: 'booked' };
+            return { text: 'Bekor qilingan', cls: 'booked' };
+        }
+
+        function renderBookingHistory() {
+            const el = document.getElementById('bookingHistoryList');
+            if (!el) return;
+            const mine = Object.values(bookings)
+                .filter(b => user && String(b.userId) === String(user.id))
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            if (mine.length === 0) {
+                el.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:8px 0;">Hali bronlar yo'q</div>`;
+                return;
+            }
+            el.innerHTML = mine.map(b => {
+                const st = bookingStatusLabel(b.status);
+                return `<div class="avail-item" style="align-items:flex-start;">
+                    <div>
+                        <div class="room">${b.cabinName}</div>
+                        <div style="font-size:11px;color:var(--muted);">${b.date} ${b.time} • ${b.duration} soat</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        <div class="status ${st.cls}">${st.text}</div>
+                        ${b.status === 'band' ? `<button class="atmo-preview-btn" style="padding:4px 10px;font-size:11px;" onclick="showQR('${b.qrCode || b.id}')">QR</button>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderCalendarBookings() {
+            const dateInput = document.getElementById('calendarDate');
+            const el = document.getElementById('calendarBookingsList');
+            if (!el || !dateInput) return;
+            if (!dateInput.value) dateInput.value = new Date().toISOString().slice(0, 10);
+            const d = dateInput.value;
+            const list = Object.values(bookings).filter(b => b.date === d);
+            if (list.length === 0) {
+                el.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:8px 0;">Bu sanada bron yo'q</div>`;
+                return;
+            }
+            el.innerHTML = list.map(b => {
+                const st = bookingStatusLabel(b.status);
+                return `<div class="avail-item">
+                    <div>
+                        <div class="room">${b.cabinName}</div>
+                        <div style="font-size:11px;color:var(--muted);">${b.time} • ${b.userName}</div>
+                    </div>
+                    <div class="status ${st.cls}">${st.text}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderAdminPending() {
+            const card = document.getElementById('adminCard');
+            const el = document.getElementById('adminPendingList');
+            if (!card) return;
+            if (!isAdmin()) { card.style.display = 'none'; return; }
+            card.style.display = '';
+            if (!el) return;
+            const pending = Object.values(bookings).filter(b => b.status === 'kutilmoqda')
+                .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            if (pending.length === 0) {
+                el.innerHTML = `<div style="color:var(--muted);font-size:12px;padding:8px 0;">Kutilayotgan so'rovlar yo'q</div>`;
+                return;
+            }
+            el.innerHTML = pending.map(b => `<div class="avail-item" style="align-items:flex-start;">
+                <div>
+                    <div class="room">${b.cabinName}</div>
+                    <div style="font-size:11px;color:var(--muted);">${b.date} ${b.time} • ${b.userName}</div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button class="abtn abtn-add" style="padding:5px 10px;font-size:11px;" onclick="approveBooking('${b.id}')">Tasdiqlash</button>
+                    <button class="abtn abtn-remove" style="padding:5px 10px;font-size:11px;" onclick="rejectBooking('${b.id}')">Rad etish</button>
+                </div>
+            </div>`).join('');
+        }
+
+        async function refreshBookingsUI() {
+            await loadBookings();
+            renderBookingHistory();
+            renderCalendarBookings();
+            renderAdminPending();
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  THEME (dark / light)
+        // ═══════════════════════════════════════════════════════════════
+        function getThemePref() {
+            return localStorage.getItem('selectedTheme') || 'dark';
+        }
+
+        function applyTheme(theme) {
+            document.body.classList.toggle('light', theme === 'light');
+            markActiveThemeOption();
+        }
+
+        function markActiveThemeOption() {
+            const t = getThemePref();
+            document.querySelectorAll('#themeOptions .atmo-opt').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-theme') === t);
+            });
+        }
+
+        function setThemePref(theme) {
+            localStorage.setItem('selectedTheme', theme);
+            applyTheme(theme);
+            showToast(theme === 'light' ? "Yorug' rejim yoqildi" : 'Tungi rejim yoqildi', 'success');
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  PERSISTENT APP-WIDE AMBIENT BACKGROUND
+        // ═══════════════════════════════════════════════════════════════
+        const APPBG_CLASS = { gta: 'bg-gta', fifa: 'bg-fifa', psplus_autumn: 'bg-psplus' };
+
+        function currentAtmoMode() {
+            const pref = getAtmospherePref();
+            if (pref && pref !== 'random' && ATMO_MODES.includes(pref)) return pref;
+            let idx = parseInt(localStorage.getItem('atmoRotation') || '0', 10);
+            if (isNaN(idx) || idx < 0 || idx >= ATMO_MODES.length) idx = 0;
+            return ATMO_MODES[idx];
+        }
+
+        function setAppBackground(mode) {
+            const m = mode || currentAtmoMode();
+            document.body.classList.remove('bg-gta', 'bg-fifa', 'bg-psplus');
+            document.body.classList.add(APPBG_CLASS[m] || 'bg-gta');
+            buildAppBgParticles(m);
+        }
+
+        function buildAppBgParticles(mode) {
+            const c = document.getElementById('appBgParticles');
+            if (!c) return;
+            c.innerHTML = '';
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduce) return;
+            const n = 14;
+            for (let i = 0; i < n; i++) {
+                const d = document.createElement('div');
+                d.className = 'ab-dot';
+                d.style.left = (Math.random() * 100) + '%';
+                const dur = 16 + Math.random() * 16;
+                d.style.animationDuration = dur + 's';
+                d.style.animationDelay = (-Math.random() * dur) + 's';
+                const s = 3 + Math.random() * 5;
+                d.style.width = s + 'px';
+                d.style.height = s + 'px';
+                d.style.setProperty('--abx', (Math.random() * 80 - 40) + 'px');
+                c.appendChild(d);
+            }
+        }
+
+        function previewAtmosphere() {
+            const pref = getAtmospherePref();
+            const mode = (pref && pref !== 'random') ? pref : ATMO_MODES[Math.floor(Math.random() * ATMO_MODES.length)];
+            runAtmosphereIntro(mode);
+        }
+
+        document.getElementById('atmoEnter')?.addEventListener('click', closeAtmosphere);
+        document.getElementById('atmoIntro')?.addEventListener('click', function(e) {
+            if (e.target === this) closeAtmosphere();
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        //  BOOT
+        // ═══════════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', function() {
+            replaceMatIcons();
+            applyTheme(getThemePref());
+            applyGlass(getGlassPref());
+            setAppBackground();
+            runEntranceSequence();
+            markActiveAtmoOption();
+            markActiveThemeOption();
+            markActivePackOption();
+            markActiveGlassOption();
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1500);
+            init();
+
+            document.addEventListener('click', function(e) {
+                const menu = document.getElementById('userMenu');
+                if (menu && menu.classList.contains('show')) {
+                    if (!e.target.closest('.user-menu') && !e.target.closest('.uavatar')) {
+                        menu.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        console.log('Injoygame loaded (Telegram Mini App)');
+        console.log('Firebase:', FB_URL);
+        console.log('Bot:', BOT_TOKEN.split(':')[0]);
+        console.log('VR panoramas enabled for all cabins (default image set)');
     </script>
 </body>
 </html>
