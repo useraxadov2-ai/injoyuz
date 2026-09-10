@@ -2626,6 +2626,21 @@
         const DEFAULT_PANORAMA = 'https://i.ibb.co/d0WFMNVB/Gemini-Generated-Image-h1wt4nh1wt4nh1wt.jpg';
 
         // ═══════════════════════════════════════════════════════════════
+        //  CABIN STRUCTURE (1,2 = VIP · 3,4,5 = MINI · 6,7,8,9 = STANDARD)
+        // ═══════════════════════════════════════════════════════════════
+        const CABIN_STRUCTURE = [
+            { type: 'vip', room: 1, name: 'VIP 1', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
+            { type: 'vip', room: 2, name: 'VIP 2', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
+            { type: 'mini', room: 3, name: 'Mini 3', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'mini', room: 4, name: 'Mini 4', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'mini', room: 5, name: 'Mini 5', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 6, name: 'Standard 6', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 7, name: 'Standard 7', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 8, name: 'Standard 8', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 9, name: 'Standard 9', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' }
+        ];
+
+        // ═══════════════════════════════════════════════════════════════
         //  STATE
         // ═══════════════════════════════════════════════════════════════
         let dbData = { cabins: {}, menu: {}, room_status: {}, texts: {}, users: {} };
@@ -2702,32 +2717,30 @@
                 const resp = await fetch(FB_URL + '.json');
                 const data = await resp.json();
                 dbData = data || {};
-                cabins = [];
-                if (dbData.cabins) {
-                    for (const [type, info] of Object.entries(dbData.cabins)) {
-                        const rooms = info.rooms || [];
-                        for (const roomNum of rooms) {
-                            const cabin = {
-                                id: type + '_' + roomNum,
-                                type: type,
-                                room: roomNum,
-                                name: info.name || type + ' ' + roomNum,
-                                price: parseInt(String(info.price).replace(/\D/g, '')) || 0,
-                                capacity: info.capacity || '—',
-                                equipment: info.equipment || '—',
-                                image: info.image || '',
-                                total: info.total || '—',
-                                emoji: info.emoji || '',
-                                panorama: info.panorama || info.image360 || ''
-                            };
-                            // ═══ FIX: if no panorama is set, use the default ═══
-                            if (!cabin.panorama) {
-                                cabin.panorama = DEFAULT_PANORAMA;
-                            }
-                            cabins.push(cabin);
-                        }
+
+                // ═══ BUILD CABINS FROM FIXED STRUCTURE ═══
+                cabins = CABIN_STRUCTURE.map(entry => {
+                    const typeInfo = (dbData.cabins && dbData.cabins[entry.type]) || {};
+                    const cabin = {
+                        id: entry.type + '_' + entry.room,
+                        type: entry.type,
+                        room: entry.room,
+                        name: entry.name,
+                        price: parseInt(String(typeInfo.price).replace(/\D/g, '')) || entry.price,
+                        capacity: typeInfo.capacity || entry.capacity,
+                        equipment: typeInfo.equipment || entry.equipment,
+                        image: typeInfo.image || '',
+                        total: typeInfo.total || '—',
+                        emoji: typeInfo.emoji || '',
+                        panorama: typeInfo.panorama || typeInfo.image360 || ''
+                    };
+                    // If no panorama is set, use the default
+                    if (!cabin.panorama) {
+                        cabin.panorama = DEFAULT_PANORAMA;
                     }
-                }
+                    return cabin;
+                });
+
                 menuItems = [];
                 if (dbData.menu) {
                     for (const [category, items] of Object.entries(dbData.menu)) {
@@ -2837,7 +2850,7 @@
         //  CABINS
         // ═══════════════════════════════════════════════════════════════
         function renderCabinCats() {
-            const cats = ['Barchasi', 'mini', 'standard', 'vip'];
+            const cats = ['Barchasi', 'vip', 'mini', 'standard'];
             const catList = document.getElementById('cabinCatList');
             catList.innerHTML = cats.map(c =>
                 `<div class="cat ${cabinCat === c ? 'active' : ''}" onclick="switchCabinCat('${c}')">${c === 'Barchasi' ? 'Barchasi' : c.charAt(0).toUpperCase() + c.slice(1)}</div>`
@@ -2900,7 +2913,7 @@
                                 <div class="vsub">Xona ${c.room} • ${c.capacity}</div>
                                 <div class="btn-row" onclick="event.stopPropagation();">
                                     <button class="abtn abtn-book" onclick="openCabinDetail('${c.id}')">Ko'rish</button>
-                                        
+                                    <button class="abtn abtn-outline" onclick="openPanorama('${pano}')">360° VR</button>
                                     ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${c.id}','cabin')">Olib tashlash</button>` : 
                                     `<button class="abtn abtn-add" onclick="quickBook('${c.id}')" ${!isFree ? 'disabled' : ''}>Bron</button>`}
                                 </div>
@@ -3960,6 +3973,7 @@
         console.log('Injoygame loaded (Telegram Mini App)');
         console.log('Firebase:', FB_URL);
         console.log('Bot:', BOT_TOKEN.split(':')[0]);
+        console.log('Cabin structure: 1,2=VIP · 3,4,5=MINI · 6,7,8,9=STANDARD');
         console.log('VR panoramas enabled for all cabins (default image set)');
     </script>
 </body>
