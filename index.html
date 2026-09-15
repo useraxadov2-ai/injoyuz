@@ -6,9 +6,9 @@
     <title>Injoygame</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
-    </script>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         /* ── RESET & ROOT ── */
         * {
@@ -24,6 +24,7 @@
             --surface: #13131f;
             --card: #1c1c2e;
             --card-hover: #26263a;
+            --card2: #1c1c2e;
             --text: #f0f0f8;
             --muted: #7a7a9a;
             --border: rgba(255, 255, 255, 0.06);
@@ -45,6 +46,7 @@
             --surface: #eaeae4;
             --card: #ffffff;
             --card-hover: #f0f0ec;
+            --card2: #e8e8e2;
             --text: #111118;
             --muted: #888890;
             --border: rgba(0, 0, 0, 0.07);
@@ -548,49 +550,58 @@
 
         /* ── 360 / VR PANORAMA MODAL ── */
         #panoramaModal {
+            display: none;
             position: fixed;
             inset: 0;
+            z-index: 6000;
             background: #000;
-            z-index: 10050;
-            display: none;
         }
         #panoramaModal.show {
             display: block;
         }
-        #panoramaModal a-scene {
+        #panorama {
             width: 100%;
             height: 100%;
+            background-color: #000;
         }
         .panorama-close {
             position: absolute;
             top: 14px;
             right: 14px;
-            z-index: 10051;
+            z-index: 10;
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: none;
-            background: rgba(0, 0, 0, .55);
+            background: rgba(0, 0, 0, .6);
             color: #fff;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
+            font-size: 18px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .panorama-close:active {
+            transform: scale(0.92);
         }
         .panorama-hint {
             position: absolute;
-            bottom: 18px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 10051;
-            background: rgba(0, 0, 0, .55);
             color: #fff;
-            font-size: 11px;
-            padding: 6px 12px;
+            font-size: 12px;
+            z-index: 10;
+            background: rgba(0, 0, 0, .55);
+            padding: 6px 14px;
             border-radius: 99px;
-            white-space: nowrap;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
         }
+
         .badge-row {
             position: absolute;
             top: 6px;
@@ -849,7 +860,6 @@
             font-weight: 700;
         }
 
-        /* Availability calendar */
         .availability-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1292,8 +1302,6 @@
 
         /* ══════════════════════════════════════════════════════════
            CINEMATIC ENTRANCE ATMOSPHERE SYSTEM
-           Three original, rotating gaming-inspired intros:
-           GTA-style sunset city · FIFA-style stadium · PS+ Autumn
            ══════════════════════════════════════════════════════════ */
         #atmoIntro {
             position: fixed;
@@ -1349,7 +1357,6 @@
             mix-blend-mode: overlay;
         }
 
-        /* ── shared cinematic drift ── */
         @keyframes atmoDrift {
             0% {
                 transform: translate3d(0, 0, 0) scale(1.05);
@@ -1407,7 +1414,7 @@
             }
         }
 
-        /* ═══ MODE 1 · GTA-STYLE (sunset open-world city) ═══ */
+        /* ═══ MODE 1 · GTA-STYLE ═══ */
         #atmoIntro.mode-gta .l-sky {
             background:
                 linear-gradient(180deg,
@@ -1447,7 +1454,7 @@
             animation: atmoPulse 5s ease-in-out infinite;
         }
 
-        /* ═══ MODE 2 · FIFA-STYLE (stadium / pitch) ═══ */
+        /* ═══ MODE 2 · FIFA-STYLE ═══ */
         #atmoIntro.mode-fifa .l-sky {
             background:
                 radial-gradient(80% 60% at 50% -10%, #2b6b4a 0%, #103d2c 45%, #06180f 100%);
@@ -1487,7 +1494,7 @@
             animation: atmoSweep 3.6s ease-in-out .4s infinite;
         }
 
-        /* ═══ MODE 3 · PS PLUS + AUTUMN (premium evening calm) ═══ */
+        /* ═══ MODE 3 · PS PLUS + AUTUMN ═══ */
         #atmoIntro.mode-psplus .l-sky {
             background:
                 linear-gradient(180deg, #0a1030 0%, #1a1450 40%, #2a1c4d 70%, #3a2246 100%);
@@ -1508,7 +1515,6 @@
             background: linear-gradient(180deg, transparent, rgba(20, 16, 60, .8));
         }
 
-        /* ── particles / leaves containers ── */
         .atmo-particles,
         .atmo-leaves {
             position: absolute;
@@ -1544,7 +1550,6 @@
             color: #d98a3d;
         }
 
-        /* ── foreground content / brand reveal ── */
         .atmo-content {
             position: relative;
             z-index: 5;
@@ -1683,7 +1688,7 @@
             }
         }
 
-        /* ── FIFA-STYLE PACK OPENING (entrance) ── */
+        /* ── FIFA-STYLE PACK OPENING ── */
         #packIntro {
             position: fixed;
             inset: 0;
@@ -1948,7 +1953,7 @@
             }
         }
 
-        /* ── GLASS MODE (translucent layered surfaces) ── */
+        /* ── GLASS MODE ── */
         body.glass-mode {
             --card: rgba(28, 28, 46, .48);
             --card-hover: rgba(38, 38, 58, .55);
@@ -1971,7 +1976,7 @@
             -webkit-backdrop-filter: blur(18px);
         }
 
-        /* ── Appearance / atmosphere settings (profile) ── */
+        /* ── Appearance / atmosphere settings ── */
         .appearance-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -2093,11 +2098,7 @@
             height: 16px;
         }
 
-        /* ══════════════════════════════════════════════════════════
-           PERSISTENT APP-WIDE ANIMATED BACKGROUND
-           A subtle, always-on ambient layer that reflects the chosen
-           atmosphere theme and stays behind all app content.
-           ══════════════════════════════════════════════════════════ */
+        /* ── PERSISTENT APP-WIDE ANIMATED BACKGROUND ── */
         #appBg {
             position: fixed;
             inset: 0;
@@ -2143,7 +2144,6 @@
                 transform: translate(-11vw, -7vh) scale(1);
             }
         }
-        /* themed glow colors */
         body.bg-gta .ab-glow-1 {
             background: radial-gradient(circle, #ff6a4d, transparent 70%);
         }
@@ -2200,7 +2200,6 @@
             }
         }
 
-        /* Keep all app chrome above the ambient background */
         header,
         #welcomeBanner,
         .main-tabs,
@@ -2218,7 +2217,6 @@
             }
         }
 
-        /* theme picker reuses the atmosphere option styling */
         .theme-swatch {
             width: 34px;
             height: 34px;
@@ -2546,7 +2544,7 @@
                     </svg>
                     Bronlar taqvimi
                 </div>
-                <div class="ac-sub">Har qanday sanadagi barcha bronlarni ko'ring — 1 kundan 100 yilgacha</div>
+                <div class="ac-sub">Har qanday sanadagi barcha bronlarni ko'ring</div>
                 <div class="sheet-book-row" style="grid-template-columns:1fr;margin-bottom:8px;">
                     <div class="field"><label>Sana</label><input type="date" id="calendarDate" onchange="renderCalendarBookings()"></div>
                 </div>
@@ -2592,10 +2590,7 @@
     <div id="panoramaModal">
         <button class="panorama-close" onclick="closePanorama()"><span class="mat-icon">close</span></button>
         <div class="panorama-hint">Aylanish uchun barmog'ingiz bilan suring</div>
-        <a-scene embedded vr-mode-ui="enabled: true" loading-screen="enabled: false">
-            <a-sky id="panoramaSky" src="" rotation="0 -90 0" crossorigin="anonymous"></a-sky>
-            <a-camera look-controls="reverseMouseDrag: true"></a-camera>
-        </a-scene>
+        <div id="panorama"></div>
     </div>
 
     <!-- ─── QR MODAL ─── -->
@@ -2616,17 +2611,16 @@
         // ═══════════════════════════════════════════════════════════════
         //  CONFIG
         // ═══════════════════════════════════════════════════════════════
-        const FB_URL = 'https://club-3d454-default-rtdb.firebaseio.com/';
+        const FB_URL = 'https://injoyafana-default-rtdb.firebaseio.com/';
         const BOT_TOKEN = '8600058131:AAGM-KhqVO0r_8npRlBxbcieuufPBaTVJVY';
         const MENU_ORDERS_CHAT_ID = '-5171281890';
         const CABIN_BOOKING_CHAT_ID = '-1004401105554';
 
-        // ═══ DEFAULT PANORAMA (from 360 jala.html) ═══
-        // This URL is used for any cabin that does NOT have a panorama in Firebase.
+        // ═══ DEFAULT PANORAMA ═══
         const DEFAULT_PANORAMA = 'https://i.ibb.co/d0WFMNVB/Gemini-Generated-Image-h1wt4nh1wt4nh1wt.jpg';
 
         // ═══════════════════════════════════════════════════════════════
-        //  CABIN STRUCTURE (1,2 = VIP · 3,4,5 = MINI · 6,7,8,9 = STANDARD)
+        //  CABIN STRUCTURE
         // ═══════════════════════════════════════════════════════════════
         const CABIN_STRUCTURE = [
             { type: 'vip', room: 1, name: 'VIP 1', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
@@ -2692,8 +2686,8 @@
                 updateUserUI();
                 await loadData();
                 await loadBookings();
-                applyAutoTheme();
-                updateOnlineStatus();
+                renderCabinCats();
+                renderMenuCats();
                 renderCabins();
                 renderMenu();
                 renderCart();
@@ -2718,7 +2712,6 @@
                 const data = await resp.json();
                 dbData = data || {};
 
-                // ═══ BUILD CABINS FROM FIXED STRUCTURE ═══
                 cabins = CABIN_STRUCTURE.map(entry => {
                     const typeInfo = (dbData.cabins && dbData.cabins[entry.type]) || {};
                     const cabin = {
@@ -2734,7 +2727,6 @@
                         emoji: typeInfo.emoji || '',
                         panorama: typeInfo.panorama || typeInfo.image360 || ''
                     };
-                    // If no panorama is set, use the default
                     if (!cabin.panorama) {
                         cabin.panorama = DEFAULT_PANORAMA;
                     }
@@ -2768,20 +2760,6 @@
                 showToast('Maʼlumotlarni yuklashda xatolik', 'warning');
             }
         }
-
-        // ═══════════════════════════════════════════════════════════════
-        //  THEME & ONLINE
-        // ═══════════════════════════════════════════════════════════════
-        function applyAutoTheme() {
-            const hour = new Date().getHours();
-            const isDay = hour >= 6 && hour < 20;
-            document.body.classList.toggle('light', isDay);
-        }
-
-        function updateOnlineStatus() {}
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
 
         // ═══════════════════════════════════════════════════════════════
         //  USER
@@ -2827,12 +2805,13 @@
             document.getElementById('profilePage').classList.toggle('show', tab === 'profile');
             document.body.classList.toggle('show-savad', tab === 'savad');
             if (tab === 'savad') renderCart();
-            if (tab === 'profile') { updateProfile();
+            if (tab === 'profile') {
+                updateProfile();
                 renderAvailability();
-                refreshBookingsUI(); }
+                refreshBookingsUI();
+            }
             document.querySelectorAll('.navi').forEach(n => n.classList.remove('active'));
-            const map = { cabins: 'cabins', menu: 'menu', savad: 'savad', profile: 'profile' };
-            const navBtn = document.querySelector(`.navi[onclick*="${map[tab]}"]`);
+            const navBtn = document.querySelector(`.navi[onclick*="${tab}"]`);
             if (navBtn) navBtn.classList.add('active');
             closeModal();
             const sc = document.getElementById('scrollContent');
@@ -2840,8 +2819,7 @@
         }
 
         function nav(p, el) {
-            const map = { cabins: 'cabins', menu: 'menu', savad: 'savad', profile: 'profile' };
-            switchMainTab(map[p] || 'cabins');
+            switchMainTab(p);
         }
 
         function goHome() { switchMainTab('cabins'); }
@@ -2869,18 +2847,10 @@
         }
 
         function getRoomStatus(type, roomNum) {
-            const statuses = roomStatus[type] || {};
-            if (Array.isArray(statuses)) {
-                const idx = roomNum - 1;
-                if (idx >= 0 && idx < statuses.length) {
-                    return statuses[idx] || 'bo\'sh';
-                }
-                return 'bo\'sh';
+            if (roomStatus[type] && typeof roomStatus[type] === 'object' && roomStatus[type][roomNum] !== undefined) {
+                return roomStatus[type][roomNum];
             }
-            if (typeof statuses === 'object') {
-                return statuses[roomNum] || 'bo\'sh';
-            }
-            return 'bo\'sh';
+            return "bo'sh";
         }
 
         function renderCabins() {
@@ -2898,7 +2868,7 @@
             grid.innerHTML = filtered.map(c => {
                 const inCart = cart.some(item => item.type === 'cabin' && item.id === c.id);
                 const status = getRoomStatus(c.type, c.room);
-                const isFree = status === 'bo\'sh';
+                const isFree = status === "bo'sh";
                 const img = c.image || '';
                 const pano = c.panorama || DEFAULT_PANORAMA;
                 return `<div class="vcard" onclick="openCabinDetail('${c.id}')">
@@ -2929,7 +2899,7 @@
             const cabin = cabins.find(c => c.id === id);
             if (!cabin) return;
             const status = getRoomStatus(cabin.type, cabin.room);
-            const isFree = status === 'bo\'sh';
+            const isFree = status === "bo'sh";
             const inCart = cart.some(item => item.type === 'cabin' && item.id === id);
             const pano = cabin.panorama || DEFAULT_PANORAMA;
             document.getElementById('mBody').innerHTML = `
@@ -2983,25 +2953,54 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        //  360 / VR PANORAMA VIEW
+        //  360 / VR PANORAMA VIEW (Pannellum)
         // ═══════════════════════════════════════════════════════════════
+        let viewer = null;
+
         function openPanorama(url) {
             if (!url) url = DEFAULT_PANORAMA;
-            document.getElementById('panoramaSky').setAttribute('src', url);
+
             document.getElementById('panoramaModal').classList.add('show');
+
+            if (viewer) {
+                try { viewer.destroy(); } catch (e) {}
+                viewer = null;
+            }
+            const container = document.getElementById('panorama');
+            container.innerHTML = '';
+
+            try {
+                viewer = pannellum.viewer('panorama', {
+                    "type": "equirectangular",
+                    "panorama": url,
+                    "autoLoad": true,
+                    "showControls": false,
+                    "mouseZoom": false
+                });
+            } catch (e) {
+                console.error('Panorama error:', e);
+                container.innerHTML = '<div style="color:#fff;padding:20px;text-align:center;">360° rasm yuklanmadi</div>';
+            }
         }
 
         function closePanorama() {
             document.getElementById('panoramaModal').classList.remove('show');
-            document.getElementById('panoramaSky').setAttribute('src', '');
+            if (viewer) {
+                try { viewer.destroy(); } catch (e) {}
+                viewer = null;
+            }
+            const container = document.getElementById('panorama');
+            if (container) container.innerHTML = '';
         }
 
         // ═══════════════════════════════════════════════════════════════
         //  BOOKING CONFLICT CHECK
         // ═══════════════════════════════════════════════════════════════
         function timeToMinutes(t) {
-            const [h, m] = String(t || '0:0').split(':').map(Number);
-            return (h || 0) * 60 + (m || 0);
+            const parts = String(t || '0:0').split(':');
+            const h = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10);
+            return (isNaN(h) ? 0 : h) * 60 + (isNaN(m) ? 0 : m);
         }
 
         function timesOverlap(timeA, durationA, timeB, durationB) {
@@ -3041,10 +3040,10 @@
                 openCabinDetail(id);
                 return;
             }
-            const bookingRecord = saveBookingRequest(cabin, date, time, duration);
+            const bookingRecord = await saveBookingRequest(cabin, date, time, duration);
             const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
                 bookingId: bookingRecord.id };
-            cart.push({ type: 'cabin', id: id, qty: 1, bookingData: bookingData, price: cabin.price * duration });
+            cart.push({ type: 'cabin', id: id, qty: duration, price: cabin.price, bookingData: bookingData });
             updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
             renderCabins();
             renderCart();
@@ -3072,10 +3071,10 @@
                 openCabinDetail(id);
                 return;
             }
-            const bookingRecord = saveBookingRequest(cabin, date, time, duration);
+            const bookingRecord = await saveBookingRequest(cabin, date, time, duration);
             const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
                 bookingId: bookingRecord.id };
-            cart.push({ type: 'cabin', id: id, qty: 1, bookingData: bookingData, price: cabin.price * duration });
+            cart.push({ type: 'cabin', id: id, qty: duration, price: cabin.price, bookingData: bookingData });
             updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
             renderCabins();
             renderCart();
@@ -3087,16 +3086,10 @@
         }
 
         function updateRoomStatus(type, room, status) {
-            if (!roomStatus[type]) {
-                if (type === 'mini') roomStatus[type] = [];
-                else roomStatus[type] = {};
+            if (!roomStatus[type] || typeof roomStatus[type] !== 'object') {
+                roomStatus[type] = {};
             }
-            if (Array.isArray(roomStatus[type])) {
-                const idx = room - 1;
-                if (idx >= 0) roomStatus[type][idx] = status;
-            } else if (typeof roomStatus[type] === 'object') {
-                roomStatus[type][room] = status;
-            }
+            roomStatus[type][room] = status;
             const patch = {};
             patch[type] = roomStatus[type];
             fetch(FB_URL + 'room_status.json', {
@@ -3113,7 +3106,7 @@
             const cats = ['Barchasi', ...new Set(menuItems.map(m => m.category))];
             const catList = document.getElementById('menuCatList');
             catList.innerHTML = cats.map(c =>
-                `<div class="cat ${menuCat === c ? 'active' : ''}" onclick="switchMenuCat('${c}')">${c}</div>`
+                `<div class="cat ${menuCat === c ? 'active' : ''}" onclick="switchMenuCat('${String(c).replace(/'/g, "\\'")}')">${c}</div>`
             ).join('');
         }
 
@@ -3187,7 +3180,7 @@
             if (type === 'cabin') {
                 const cabin = cabins.find(c => c.id === id);
                 if (cabin) {
-                    updateRoomStatus(cabin.type, cabin.room, 'bo\'sh');
+                    updateRoomStatus(cabin.type, cabin.room, "bo'sh");
                     renderAvailability();
                 }
             }
@@ -3284,8 +3277,8 @@
         function updateProfile() {
             document.getElementById('profileName').textContent = user ? user.name : 'Mehmon';
             document.getElementById('profileId').textContent = user ? user.id : '—';
-            const bookings = cart.filter(item => item.type === 'cabin').length;
-            document.getElementById('profileBookings').textContent = bookings;
+            const bookingsCount = cart.filter(item => item.type === 'cabin').length;
+            document.getElementById('profileBookings').textContent = bookingsCount;
             document.getElementById('profileCart').textContent = cart.length;
         }
 
@@ -3294,10 +3287,10 @@
             let html = '';
             cabins.forEach(c => {
                 const status = getRoomStatus(c.type, c.room);
-                const isFree = status === 'bo\'sh';
+                const isFree = status === "bo'sh";
                 html += `<div class="avail-item">
                             <div class="room">${c.name}</div>
-                            <div class="status ${isFree ? 'free' : 'booked'}">${isFree ? 'Bo\'sh' : 'Band'}</div>
+                            <div class="status ${isFree ? 'free' : 'booked'}">${isFree ? "Bo'sh" : 'Band'}</div>
                         </div>`;
             });
             container.innerHTML = html;
@@ -3325,7 +3318,7 @@
             if (user.username) msg += 'Username: @' + user.username + '\n';
             msg += '------------------------\n';
             const cabinItems = cart.filter(item => item.type === 'cabin');
-            const menuItems = cart.filter(item => item.type === 'menu');
+            const menuCartItems = cart.filter(item => item.type === 'menu');
             if (cabinItems.length > 0) {
                 msg += 'KABINALAR:\n';
                 cabinItems.forEach((item, i) => {
@@ -3334,9 +3327,9 @@
                         `${i+1}. ${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${item.price.toLocaleString()} UZS\n`;
                 });
             }
-            if (menuItems.length > 0) {
+            if (menuCartItems.length > 0) {
                 msg += 'MENYU:\n';
-                menuItems.forEach((item, i) => {
+                menuCartItems.forEach((item, i) => {
                     msg += `${i+1}. ${item.title || item.id} x ${item.qty} — ${(item.price * item.qty).toLocaleString()} UZS\n`;
                 });
             }
@@ -3384,14 +3377,18 @@
             document.getElementById('qrOrderId').textContent = orderId;
             const container = document.getElementById('qrCodeContainer');
             container.innerHTML = '';
-            new QRCode(container, {
-                text: orderId,
-                width: 200,
-                height: 200,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            try {
+                new QRCode(container, {
+                    text: orderId,
+                    width: 200,
+                    height: 200,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                console.warn('QR error:', e);
+            }
             document.getElementById('qrModal').classList.add('show');
         }
 
@@ -3720,7 +3717,7 @@
             }
         }
 
-        function saveBookingRequest(cabin, date, time, duration) {
+        async function saveBookingRequest(cabin, date, time, duration) {
             const id = generateBookingId();
             const record = {
                 id,
@@ -3739,11 +3736,15 @@
                 createdAt: Date.now()
             };
             bookings[id] = record;
-            fetch(FB_URL + 'bookings/' + id + '.json', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            }).catch(e => console.warn('Booking save error:', e));
+            try {
+                await fetch(FB_URL + 'bookings/' + id + '.json', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(record)
+                });
+            } catch (e) {
+                console.warn('Booking save error:', e);
+            }
             return record;
         }
 
