@@ -3005,6 +3005,20 @@
                 showToast('Video manzili yo\'q', 'warning');
                 return;
             }
+
+            // YouTube havolasi bo'lsa, <video> tegi uni ijro eta olmaydi —
+            // Telegram ichida yoki tashqi brauzerda ochamiz
+            const isYouTube = /youtube\.com|youtu\.be/i.test(url);
+            if (isYouTube) {
+                const tg = window.Telegram?.WebApp;
+                if (tg && tg.openLink) {
+                    tg.openLink(url);
+                } else {
+                    window.open(url, '_blank');
+                }
+                return;
+            }
+
             const video = document.getElementById('roomVideo');
             const errorEl = document.getElementById('videoError');
             if (errorEl) errorEl.style.display = 'none';
@@ -3022,24 +3036,32 @@
             video.setAttribute('playsinline', '');
             video.setAttribute('webkit-playsinline', '');
             video.setAttribute('controls', '');
+            video.muted = true;
             video.src = url;
 
             video.onerror = function() {
                 console.warn('Video error:', url);
                 if (errorEl) errorEl.style.display = 'flex';
+                const tg = window.Telegram?.WebApp;
+                if (tg && tg.openLink) {
+                    tg.openLink(url);
+                }
             };
 
             video.onloadeddata = function() {
                 video.currentTime = 0;
-                const p = video.play();
-                if (p && typeof p.catch === 'function') {
-                    p.catch(err => {
-                        console.warn('Autoplay blocked, user must tap play:', err);
-                    });
-                }
             };
 
             video.load();
+
+            // MUHIM: play() endi tugma bosish bilan bir xil sinxron zanjirda —
+            // Telegram WebView bu ruxsatni onloadeddata ichida yo'qotib qo'yadi
+            const playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(err => {
+                    console.warn('Autoplay blocked, user must tap play:', err);
+                });
+            }
         }
 
         function closeVideo() {
