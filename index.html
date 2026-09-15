@@ -2579,28 +2579,13 @@
         // ═══════════════════════════════════════════════════════════════
         //  CONFIG
         // ═══════════════════════════════════════════════════════════════
-        const FB_URL = 'https://club-3d454-default-rtdb.firebaseio.com/';
+        const FB_URL = 'https://injoyafana-default-rtdb.firebaseio.com/';
         const BOT_TOKEN = '8600058131:AAGM-KhqVO0r_8npRlBxbcieuufPBaTVJVY';
         const MENU_ORDERS_CHAT_ID = '-5171281890';
         const CABIN_BOOKING_CHAT_ID = '-1004401105554';
 
         // ═══ DEFAULT PANORAMA (fallback) ═══
         const DEFAULT_PANORAMA = 'https://i.ibb.co/d0WFMNVB/Gemini-Generated-Image-h1wt4nh1wt4nh1wt.jpg';
-
-        // ═══════════════════════════════════════════════════════════════
-        //  CABIN STRUCTURE
-        // ═══════════════════════════════════════════════════════════════
-        const CABIN_STRUCTURE = [
-            { type: 'vip', room: 1, name: 'VIP 1', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
-            { type: 'vip', room: 2, name: 'VIP 2', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
-            { type: 'mini', room: 1, name: 'Mini 1', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'mini', room: 2, name: 'Mini 2', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'mini', room: 3, name: 'Mini 3', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 1, name: 'Standard 1', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 2, name: 'Standard 2', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 3, name: 'Standard 3', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 4, name: 'Standard 4', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' }
-        ];
 
         // ═══════════════════════════════════════════════════════════════
         //  STATE
@@ -2673,7 +2658,8 @@
 
         // ═══════════════════════════════════════════════════════════════
         //  LOAD DATA FROM FIREBASE
-        //  Structure: cabins/{type}/{room}/panorama, mp4, image, price...
+        //  Barcha xona ma'lumotlari Firebase'dan o'qiladi
+        //  Struktura: cabins/{type}/rooms: [{ room, price, capacity, ... }]
         // ═══════════════════════════════════════════════════════════════
         async function loadData() {
             try {
@@ -2681,33 +2667,40 @@
                 const data = await resp.json();
                 dbData = data || {};
 
-                cabins = CABIN_STRUCTURE.map(entry => {
-                    const typeGroup = (dbData.cabins && dbData.cabins[entry.type]) || {};
-                    // Try room-specific data first: cabins/mini/1/panorama
-                    const roomInfo = typeGroup[entry.room] || typeGroup[String(entry.room)] || {};
-                    // Fallback to type-level defaults if room data missing
-                    const typeInfo = typeGroup;
+                cabins = [];
+                if (dbData.cabins && typeof dbData.cabins === 'object') {
+                    Object.keys(dbData.cabins).forEach(type => {
+                        const typeGroup = dbData.cabins[type];
+                        if (!typeGroup || typeof typeGroup !== 'object') return;
+                        if (!Array.isArray(typeGroup.rooms)) return;
 
-                    const cabin = {
-                        id: entry.type + '_' + entry.room,
-                        type: entry.type,
-                        room: entry.room,
-                        name: entry.name,
-                        price: parseInt(String(roomInfo.price || typeInfo.price).replace(/\D/g, '')) || entry.price,
-                        capacity: roomInfo.capacity || typeInfo.capacity || entry.capacity,
-                        equipment: roomInfo.equipment || typeInfo.equipment || entry.equipment,
-                        image: roomInfo.image || typeInfo.image || '',
-                        total: roomInfo.total || typeInfo.total || '—',
-                        emoji: roomInfo.emoji || typeInfo.emoji || '',
-                        panorama: roomInfo.panorama || roomInfo.image360 || typeInfo.panorama || typeInfo.image360 || '',
-                        mp4: roomInfo.mp4 || roomInfo.video || typeInfo.mp4 || typeInfo.video || ''
-                    };
-                    if (!cabin.panorama) {
-                        cabin.panorama = DEFAULT_PANORAMA;
-                    }
-                    return cabin;
-                });
+                        typeGroup.rooms.forEach(roomObj => {
+                            if (!roomObj || typeof roomObj !== 'object') return;
+                            const roomNum = parseInt(roomObj.room, 10);
+                            if (isNaN(roomNum)) return;
 
+                            cabins.push({
+                                id: type + '_' + roomNum,
+                                type: type,
+                                room: roomNum,
+                                name: roomObj.name || (typeGroup.name || type) + ' ' + roomNum,
+                                price: parseInt(String(roomObj.price || 0).replace(/\D/g, ''), 10) || 0,
+                                capacity: roomObj.capacity || '',
+                                equipment: roomObj.equipment || '',
+                                image: roomObj.image || typeGroup.image || '',
+                                emoji: roomObj.emoji || typeGroup.emoji || '',
+                                panorama: roomObj.panorama || typeGroup.panorama || DEFAULT_PANORAMA,
+                                mp4: roomObj.mp4 || '',
+                                status: roomObj.status || "bo'sh"
+                            });
+                        });
+                    });
+                }
+
+                // Mehmonxona statusi (eski format — ixtiyoriy)
+                roomStatus = dbData.room_status || {};
+
+                // Menyu
                 menuItems = [];
                 if (dbData.menu) {
                     for (const [category, items] of Object.entries(dbData.menu)) {
@@ -2717,15 +2710,15 @@
                                     id: category + '_' + key,
                                     category: category,
                                     name: item.name || key,
-                                    price: parseInt(String(item.price).replace(/\D/g, '')) || 0,
-                                    image: item.image || '',
+                                    price: parseInt(String(item.price).replace(/\D/g, ''), 10) || 0,
+                                    image: item.image || item.thumb || '',
                                     desc: item.desc || ''
                                 });
                             }
                         }
                     }
                 }
-                roomStatus = dbData.room_status || {};
+
                 if (dbData.users && user && dbData.users[user.id]) {
                     const u = dbData.users[user.id];
                     user.name = u.full_name || user.name;
@@ -2803,10 +2796,10 @@
         //  CABINS
         // ═══════════════════════════════════════════════════════════════
         function renderCabinCats() {
-            const cats = ['Barchasi', 'vip', 'mini', 'standard'];
+            const cats = ['Barchasi', ...new Set(cabins.map(c => c.type))];
             const catList = document.getElementById('cabinCatList');
             catList.innerHTML = cats.map(c =>
-                `<div class="cat ${cabinCat === c ? 'active' : ''}" onclick="switchCabinCat('${c}')">${c === 'Barchasi' ? 'Barchasi' : c.charAt(0).toUpperCase() + c.slice(1)}</div>`
+                `<div class="cat ${cabinCat === c ? 'active' : ''}" onclick="switchCabinCat('${String(c).replace(/'/g, "\\'")}')">${c === 'Barchasi' ? 'Barchasi' : c.charAt(0).toUpperCase() + c.slice(1)}</div>`
             ).join('');
         }
 
@@ -2822,10 +2815,8 @@
         }
 
         function getRoomStatus(type, roomNum) {
-            if (roomStatus[type] && typeof roomStatus[type] === 'object' && roomStatus[type][roomNum] !== undefined) {
-                return roomStatus[type][roomNum];
-            }
-            return "bo'sh";
+            const cabin = cabins.find(c => c.type === type && c.room === roomNum);
+            return cabin ? (cabin.status || "bo'sh") : "bo'sh";
         }
 
         function renderCabins() {
@@ -2842,8 +2833,7 @@
             }
             grid.innerHTML = filtered.map(c => {
                 const inCart = cart.some(item => item.type === 'cabin' && item.id === c.id);
-                const status = getRoomStatus(c.type, c.room);
-                const isFree = status === "bo'sh";
+                const isFree = c.status === "bo'sh";
                 const img = c.image || '';
                 const pano = c.panorama || DEFAULT_PANORAMA;
                 const hasVideo = !!c.mp4;
@@ -2875,8 +2865,7 @@
         function openCabinDetail(id) {
             const cabin = cabins.find(c => c.id === id);
             if (!cabin) return;
-            const status = getRoomStatus(cabin.type, cabin.room);
-            const isFree = status === "bo'sh";
+            const isFree = cabin.status === "bo'sh";
             const inCart = cart.some(item => item.type === 'cabin' && item.id === id);
             const pano = cabin.panorama || DEFAULT_PANORAMA;
             const hasVideo = !!cabin.mp4;
@@ -3074,7 +3063,7 @@
             const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
                 bookingId: bookingRecord.id };
             cart.push({ type: 'cabin', id: id, qty: duration, price: cabin.price, bookingData: bookingData });
-            updateRoomStatus(cabin.type, cabin.room, 'kutlimoqda');
+            updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
             renderCabins();
             renderCart();
             updateBadges();
@@ -3084,17 +3073,25 @@
             showToast("Bron so'rovi yuborildi. Admin tasdiqlashini kuting.", 'success');
         }
 
+        // ═══════════════════════════════════════════════════════════════
+        //  UPDATE ROOM STATUS — Firebase'da cabins/{type}/rooms/{i}/status
+        // ═══════════════════════════════════════════════════════════════
         function updateRoomStatus(type, room, status) {
-            if (!roomStatus[type] || typeof roomStatus[type] !== 'object') {
-                roomStatus[type] = {};
-            }
-            roomStatus[type][room] = status;
-            const patch = {};
-            patch[type] = roomStatus[type];
-            fetch(FB_URL + 'room_status.json', {
-                method: 'PATCH',
+            // Local yangilash
+            const cabin = cabins.find(c => c.type === type && c.room === room);
+            if (cabin) cabin.status = status;
+
+            // Firebase'dagi indeksni topish
+            const typeGroup = dbData.cabins && dbData.cabins[type];
+            if (!typeGroup || !Array.isArray(typeGroup.rooms)) return;
+            const idx = typeGroup.rooms.findIndex(r => parseInt(r.room, 10) === parseInt(room, 10));
+            if (idx === -1) return;
+
+            // Firebase'ga yozish
+            fetch(`${FB_URL}cabins/${type}/rooms/${idx}/status.json`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(patch)
+                body: JSON.stringify(status)
             }).catch(e => console.warn('Firebase update error:', e));
         }
 
@@ -3285,8 +3282,7 @@
             const container = document.getElementById('availabilityContainer');
             let html = '';
             cabins.forEach(c => {
-                const status = getRoomStatus(c.type, c.room);
-                const isFree = status === "bo'sh";
+                const isFree = c.status === "bo'sh";
                 html += `<div class="avail-item">
                             <div class="room">${c.name}</div>
                             <div class="status ${isFree ? 'free' : 'booked'}">${isFree ? "Bo'sh" : 'Band'}</div>
@@ -3973,7 +3969,7 @@
         console.log('Injoygame loaded (Telegram Mini App)');
         console.log('Firebase:', FB_URL);
         console.log('Bot:', BOT_TOKEN.split(':')[0]);
-        console.log('Cabin structure: VIP 1,2 · Mini 1,2,3 · Standard 1,2,3,4');
+        console.log('All cabin data loaded from Firebase (no hardcoded rooms)');
         console.log('VR panoramas + MP4 videos enabled for all cabins');
     </script>
 </body>
