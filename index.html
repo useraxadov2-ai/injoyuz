@@ -126,12 +126,8 @@
             animation: fillBar 1.8s ease forwards;
         }
         @keyframes fillBar {
-            from {
-                width: 0;
-            }
-            to {
-                width: 100%;
-            }
+            from { width: 0; }
+            to { width: 100%; }
         }
         .pre-sub {
             font-size: 12px;
@@ -602,6 +598,46 @@
             pointer-events: none;
         }
 
+        /* ── MP4 VIDEO MODAL ── */
+        #videoModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 6000;
+            background: #000;
+        }
+        #videoModal.show {
+            display: block;
+        }
+        #videoModal video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+        .video-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, .6);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .video-close:active {
+            transform: scale(0.92);
+        }
+
         .badge-row {
             position: absolute;
             top: 6px;
@@ -710,6 +746,10 @@
             background: transparent;
             border: 1px solid var(--border);
             color: var(--muted);
+        }
+        .abtn-video {
+            background: var(--blue);
+            color: #fff;
         }
         .abtn:disabled {
             opacity: .4;
@@ -990,12 +1030,8 @@
             display: block;
         }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .modal-sheet {
             position: absolute;
@@ -1358,72 +1394,35 @@
         }
 
         @keyframes atmoDrift {
-            0% {
-                transform: translate3d(0, 0, 0) scale(1.05);
-            }
-            100% {
-                transform: translate3d(-3%, -1.5%, 0) scale(1.12);
-            }
+            0% { transform: translate3d(0, 0, 0) scale(1.05); }
+            100% { transform: translate3d(-3%, -1.5%, 0) scale(1.12); }
         }
         @keyframes atmoRise {
-            0% {
-                transform: translateY(110vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: .9;
-            }
-            100% {
-                transform: translateY(-12vh) rotate(240deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: .9; }
+            100% { transform: translateY(-12vh) rotate(240deg); opacity: 0; }
         }
         @keyframes atmoLeafFall {
-            0% {
-                transform: translateY(-14vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            12% {
-                opacity: .95;
-            }
-            100% {
-                transform: translateY(112vh) translateX(var(--drift, 40px)) rotate(320deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-14vh) translateX(0) rotate(0deg); opacity: 0; }
+            12% { opacity: .95; }
+            100% { transform: translateY(112vh) translateX(var(--drift, 40px)) rotate(320deg); opacity: 0; }
         }
         @keyframes atmoSweep {
-            0% {
-                transform: translateX(-120%) skewX(-18deg);
-                opacity: 0;
-            }
-            35% {
-                opacity: .55;
-            }
-            100% {
-                transform: translateX(160%) skewX(-18deg);
-                opacity: 0;
-            }
+            0% { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+            35% { opacity: .55; }
+            100% { transform: translateX(160%) skewX(-18deg); opacity: 0; }
         }
         @keyframes atmoPulse {
-            0%,
-            100% {
-                opacity: .55;
-            }
-            50% {
-                opacity: 1;
-            }
+            0%, 100% { opacity: .55; }
+            50% { opacity: 1; }
         }
 
         /* ═══ MODE 1 · GTA-STYLE ═══ */
         #atmoIntro.mode-gta .l-sky {
             background:
                 linear-gradient(180deg,
-                    #241033 0%,
-                    #5b1f5e 24%,
-                    #b3306b 46%,
-                    #ff6a4d 68%,
-                    #ffb457 86%,
-                    #ffd98a 100%);
+                    #241033 0%, #5b1f5e 24%, #b3306b 46%,
+                    #ff6a4d 68%, #ffb457 86%, #ffd98a 100%);
             animation: atmoDrift 14s ease-in-out infinite alternate;
         }
         #atmoIntro.mode-gta .l-sun {
@@ -1625,12 +1624,8 @@
             animation: atmoFill 3.4s ease forwards;
         }
         @keyframes atmoFill {
-            from {
-                width: 0;
-            }
-            to {
-                width: 100%;
-            }
+            from { width: 0; }
+            to { width: 100%; }
         }
         .atmo-enter {
             margin-top: 24px;
@@ -1725,9 +1720,7 @@
             opacity: 0;
             animation: pkBeam 2.6s ease-in-out infinite;
         }
-        #packIntro .pk-beam.b1 {
-            left: 5%;
-        }
+        #packIntro .pk-beam.b1 { left: 5%; }
         #packIntro .pk-beam.b2 {
             left: 30%;
             animation-delay: .4s;
@@ -1738,13 +1731,8 @@
             animation-delay: .8s;
         }
         @keyframes pkBeam {
-            0%,
-            100% {
-                opacity: 0;
-            }
-            50% {
-                opacity: .5;
-            }
+            0%, 100% { opacity: 0; }
+            50% { opacity: .5; }
         }
         #packIntro .pk-stage {
             position: relative;
@@ -1799,15 +1787,9 @@
             animation: pkFlip .7s ease forwards;
         }
         @keyframes pkFlip {
-            0% {
-                transform: scale(1) rotateY(0);
-            }
-            50% {
-                transform: scale(1.05) rotateY(90deg);
-            }
-            100% {
-                transform: scale(1) rotateY(0);
-            }
+            0% { transform: scale(1) rotateY(0); }
+            50% { transform: scale(1.05) rotateY(90deg); }
+            100% { transform: scale(1) rotateY(0); }
         }
         #packIntro .pk-glow-ring {
             position: absolute;
@@ -1924,17 +1906,9 @@
             animation: pkParticle linear infinite;
         }
         @keyframes pkParticle {
-            from {
-                transform: translateY(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-360px);
-                opacity: 0;
-            }
+            from { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            to { transform: translateY(-360px); opacity: 0; }
         }
         #packIntro .pk-skip {
             margin-top: 20px;
@@ -2129,20 +2103,12 @@
             animation: abFloat2 32s ease-in-out infinite alternate;
         }
         @keyframes abFloat1 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                transform: translate(12vw, 8vh) scale(1.25);
-            }
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(12vw, 8vh) scale(1.25); }
         }
         @keyframes abFloat2 {
-            0% {
-                transform: translate(0, 0) scale(1.15);
-            }
-            100% {
-                transform: translate(-11vw, -7vh) scale(1);
-            }
+            0% { transform: translate(0, 0) scale(1.15); }
+            100% { transform: translate(-11vw, -7vh) scale(1); }
         }
         body.bg-gta .ab-glow-1 {
             background: radial-gradient(circle, #ff6a4d, transparent 70%);
@@ -2188,12 +2154,8 @@
                 transform: translateY(0) translateX(0);
                 opacity: 0;
             }
-            10% {
-                opacity: .7;
-            }
-            90% {
-                opacity: .5;
-            }
+            10% { opacity: .7; }
+            90% { opacity: .5; }
             100% {
                 transform: translateY(-114vh) translateX(var(--abx, 20px));
                 opacity: 0;
@@ -2593,6 +2555,12 @@
         <div id="panorama"></div>
     </div>
 
+    <!-- ─── MP4 VIDEO MODAL ─── -->
+    <div id="videoModal">
+        <button class="video-close" onclick="closeVideo()"><span class="mat-icon">close</span></button>
+        <video id="roomVideo" controls autoplay muted playsinline loop></video>
+    </div>
+
     <!-- ─── QR MODAL ─── -->
     <div class="modal-over qr-modal" id="qrModal">
         <div class="modal-sheet" style="max-width:400px;margin:0 auto;text-align:center;">
@@ -2611,12 +2579,12 @@
         // ═══════════════════════════════════════════════════════════════
         //  CONFIG
         // ═══════════════════════════════════════════════════════════════
-        const FB_URL = 'https://injoyafana-default-rtdb.firebaseio.com/';
+        const FB_URL = 'https://club-3d454-default-rtdb.firebaseio.com/';
         const BOT_TOKEN = '8600058131:AAGM-KhqVO0r_8npRlBxbcieuufPBaTVJVY';
         const MENU_ORDERS_CHAT_ID = '-5171281890';
         const CABIN_BOOKING_CHAT_ID = '-1004401105554';
 
-        // ═══ DEFAULT PANORAMA ═══
+        // ═══ DEFAULT PANORAMA (fallback) ═══
         const DEFAULT_PANORAMA = 'https://i.ibb.co/d0WFMNVB/Gemini-Generated-Image-h1wt4nh1wt4nh1wt.jpg';
 
         // ═══════════════════════════════════════════════════════════════
@@ -2625,13 +2593,13 @@
         const CABIN_STRUCTURE = [
             { type: 'vip', room: 1, name: 'VIP 1', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
             { type: 'vip', room: 2, name: 'VIP 2', price: 250000, capacity: '4 kishi', equipment: 'Konditsioner, Wi-Fi, TV, PlayStation 5' },
+            { type: 'mini', room: 1, name: 'Mini 1', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'mini', room: 2, name: 'Mini 2', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
             { type: 'mini', room: 3, name: 'Mini 3', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'mini', room: 4, name: 'Mini 4', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'mini', room: 5, name: 'Mini 5', price: 100000, capacity: '2 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 6, name: 'Standard 6', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 7, name: 'Standard 7', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 8, name: 'Standard 8', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
-            { type: 'standard', room: 9, name: 'Standard 9', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' }
+            { type: 'standard', room: 1, name: 'Standard 1', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 2, name: 'Standard 2', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 3, name: 'Standard 3', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' },
+            { type: 'standard', room: 4, name: 'Standard 4', price: 150000, capacity: '3 kishi', equipment: 'Konditsioner, Wi-Fi, TV' }
         ];
 
         // ═══════════════════════════════════════════════════════════════
@@ -2705,6 +2673,7 @@
 
         // ═══════════════════════════════════════════════════════════════
         //  LOAD DATA FROM FIREBASE
+        //  Structure: cabins/{type}/{room}/panorama, mp4, image, price...
         // ═══════════════════════════════════════════════════════════════
         async function loadData() {
             try {
@@ -2713,19 +2682,25 @@
                 dbData = data || {};
 
                 cabins = CABIN_STRUCTURE.map(entry => {
-                    const typeInfo = (dbData.cabins && dbData.cabins[entry.type]) || {};
+                    const typeGroup = (dbData.cabins && dbData.cabins[entry.type]) || {};
+                    // Try room-specific data first: cabins/mini/1/panorama
+                    const roomInfo = typeGroup[entry.room] || typeGroup[String(entry.room)] || {};
+                    // Fallback to type-level defaults if room data missing
+                    const typeInfo = typeGroup;
+
                     const cabin = {
                         id: entry.type + '_' + entry.room,
                         type: entry.type,
                         room: entry.room,
                         name: entry.name,
-                        price: parseInt(String(typeInfo.price).replace(/\D/g, '')) || entry.price,
-                        capacity: typeInfo.capacity || entry.capacity,
-                        equipment: typeInfo.equipment || entry.equipment,
-                        image: typeInfo.image || '',
-                        total: typeInfo.total || '—',
-                        emoji: typeInfo.emoji || '',
-                        panorama: typeInfo.panorama || typeInfo.image360 || ''
+                        price: parseInt(String(roomInfo.price || typeInfo.price).replace(/\D/g, '')) || entry.price,
+                        capacity: roomInfo.capacity || typeInfo.capacity || entry.capacity,
+                        equipment: roomInfo.equipment || typeInfo.equipment || entry.equipment,
+                        image: roomInfo.image || typeInfo.image || '',
+                        total: roomInfo.total || typeInfo.total || '—',
+                        emoji: roomInfo.emoji || typeInfo.emoji || '',
+                        panorama: roomInfo.panorama || roomInfo.image360 || typeInfo.panorama || typeInfo.image360 || '',
+                        mp4: roomInfo.mp4 || roomInfo.video || typeInfo.mp4 || typeInfo.video || ''
                     };
                     if (!cabin.panorama) {
                         cabin.panorama = DEFAULT_PANORAMA;
@@ -2871,6 +2846,7 @@
                 const isFree = status === "bo'sh";
                 const img = c.image || '';
                 const pano = c.panorama || DEFAULT_PANORAMA;
+                const hasVideo = !!c.mp4;
                 return `<div class="vcard" onclick="openCabinDetail('${c.id}')">
                             <img src="${img}" class="vthumb" loading="lazy" onerror="this.style.background='var(--card2)';this.src=''">
                             <div class="badge-row">
@@ -2883,7 +2859,8 @@
                                 <div class="vsub">Xona ${c.room} • ${c.capacity}</div>
                                 <div class="btn-row" onclick="event.stopPropagation();">
                                     <button class="abtn abtn-book" onclick="openCabinDetail('${c.id}')">Ko'rish</button>
-                                    <button class="abtn abtn-outline" onclick="openPanorama('${pano}')">360° VR</button>
+                                    ${hasVideo ? `<button class="abtn abtn-video" onclick="openVideo('${c.mp4.replace(/'/g, "\\'")}')">Video</button>` : ''}
+                                    <button class="abtn abtn-outline" onclick="openPanorama('${pano.replace(/'/g, "\\'")}')">360°</button>
                                     ${inCart ? `<button class="abtn abtn-remove" onclick="removeFromCart('${c.id}','cabin')">Olib tashlash</button>` : 
                                     `<button class="abtn abtn-add" onclick="quickBook('${c.id}')" ${!isFree ? 'disabled' : ''}>Bron</button>`}
                                 </div>
@@ -2902,6 +2879,7 @@
             const isFree = status === "bo'sh";
             const inCart = cart.some(item => item.type === 'cabin' && item.id === id);
             const pano = cabin.panorama || DEFAULT_PANORAMA;
+            const hasVideo = !!cabin.mp4;
             document.getElementById('mBody').innerHTML = `
                         <button class="sheet-close" onclick="closeModal()"><span class="mat-icon">close</span></button>
                         <div style="padding:0 16px;">
@@ -2936,7 +2914,8 @@
                                 </div>
                             </div>
                             <div class="sheet-actions">
-                                <button class="abtn abtn-outline" onclick="openPanorama('${pano}')">360° VR ko'rish</button>
+                                ${hasVideo ? `<button class="abtn abtn-video" onclick="openVideo('${cabin.mp4.replace(/'/g, "\\'")}')">Video ko'rish</button>` : ''}
+                                <button class="abtn abtn-outline" onclick="openPanorama('${pano.replace(/'/g, "\\'")}')">360° VR</button>
                                 ${inCart ? 
                                     `<button class="abtn abtn-remove" onclick="removeFromCart('${cabin.id}','cabin');closeModal();">Savatdan olish</button>` :
                                     `<button class="abtn abtn-add" onclick="bookCabin('${cabin.id}')" ${!isFree ? 'disabled' : ''}>Bron qilish</button>`
@@ -2991,6 +2970,26 @@
             }
             const container = document.getElementById('panorama');
             if (container) container.innerHTML = '';
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        //  MP4 VIDEO VIEW
+        // ═══════════════════════════════════════════════════════════════
+        function openVideo(url) {
+            if (!url) return;
+            const video = document.getElementById('roomVideo');
+            video.src = url;
+            document.getElementById('videoModal').classList.add('show');
+            video.currentTime = 0;
+            video.play().catch(e => console.warn('Autoplay blocked:', e));
+        }
+
+        function closeVideo() {
+            const video = document.getElementById('roomVideo');
+            try { video.pause(); } catch (e) {}
+            video.removeAttribute('src');
+            video.load();
+            document.getElementById('videoModal').classList.remove('show');
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -3075,7 +3074,7 @@
             const bookingData = { date, time, duration, cabinId: id, cabinName: cabin.name, price: cabin.price,
                 bookingId: bookingRecord.id };
             cart.push({ type: 'cabin', id: id, qty: duration, price: cabin.price, bookingData: bookingData });
-            updateRoomStatus(cabin.type, cabin.room, 'kutilmoqda');
+            updateRoomStatus(cabin.type, cabin.room, 'kutlimoqda');
             renderCabins();
             renderCart();
             updateBadges();
@@ -3324,7 +3323,7 @@
                 cabinItems.forEach((item, i) => {
                     const bd = item.bookingData || {};
                     msg +=
-                        `${i+1}. ${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${item.price.toLocaleString()} UZS\n`;
+                        `${i+1}. ${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${(item.price * item.qty).toLocaleString()} UZS\n`;
                 });
             }
             if (menuCartItems.length > 0) {
@@ -3351,7 +3350,7 @@
                 cabinItems.forEach((item) => {
                     const bd = item.bookingData || {};
                     cabinMsg +=
-                        `${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${item.price.toLocaleString()} UZS\n`;
+                        `${bd.cabinName || item.id} — ${bd.date || '—'} ${bd.time || ''} (${bd.duration || 1} soat) — ${(item.price * item.qty).toLocaleString()} UZS\n`;
                 });
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
@@ -3974,8 +3973,8 @@
         console.log('Injoygame loaded (Telegram Mini App)');
         console.log('Firebase:', FB_URL);
         console.log('Bot:', BOT_TOKEN.split(':')[0]);
-        console.log('Cabin structure: 1,2=VIP · 3,4,5=MINI · 6,7,8,9=STANDARD');
-        console.log('VR panoramas enabled for all cabins (default image set)');
+        console.log('Cabin structure: VIP 1,2 · Mini 1,2,3 · Standard 1,2,3,4');
+        console.log('VR panoramas + MP4 videos enabled for all cabins');
     </script>
 </body>
 </html>
