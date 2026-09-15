@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
     <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         /* ── RESET & ROOT ── */
         * {
@@ -598,16 +599,19 @@
             pointer-events: none;
         }
 
-        /* ── MP4 VIDEO MODAL ── */
+        /* ── VIDEO MODAL (YouTube + MP4) ── */
         #videoModal {
             display: none;
             position: fixed;
             inset: 0;
             z-index: 7000;
-            background: #000;
+            background: rgba(0, 0, 0, .92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
         #videoModal.show {
             display: block;
+            animation: fadeIn .25s ease;
         }
         .video-close {
             position: absolute;
@@ -635,16 +639,35 @@
             position: absolute;
             inset: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #000;
+            background: transparent;
+            padding: 20px;
+            gap: 16px;
         }
-        .video-wrap video {
+        .video-frame {
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .6);
+        }
+        .video-frame iframe,
+        .video-frame video {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
+            border: none;
+            display: block;
+        }
+        .video-frame video {
             object-fit: contain;
             background: #000;
-            display: block;
         }
         .video-error {
             position: absolute;
@@ -659,6 +682,7 @@
             font-size: 14px;
             background: rgba(0, 0, 0, .85);
             padding: 20px;
+            border-radius: 12px;
         }
         .video-error .mat-icon {
             font-size: 48px;
@@ -2587,11 +2611,14 @@
         <div id="panorama"></div>
     </div>
 
-    <!-- ─── MP4 VIDEO MODAL ─── -->
+    <!-- ─── VIDEO MODAL (YouTube + MP4) ─── -->
     <div id="videoModal">
         <button class="video-close" onclick="closeVideo()" type="button"><span class="mat-icon">close</span></button>
         <div class="video-wrap">
-            <video id="roomVideo" controls playsinline webkit-playsinline muted preload="metadata"></video>
+            <div class="video-frame">
+                <div id="ytPlayer"></div>
+                <video id="roomVideo" controls playsinline webkit-playsinline muted preload="metadata" style="display:none;"></video>
+            </div>
             <div class="video-error" id="videoError" style="display:none;">
                 <span class="mat-icon">videocam_off</span>
                 <div>Video yuklanmadi</div>
@@ -2998,69 +3025,119 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        //  MP4 VIDEO VIEW — Telegram Mini App uchun optimallashtirilgan
+        //  VIDEO VIEW — YouTube va MP4 qo'llab-quvvatlaydi
+        //  YouTube: IFrame Player API (inline, full screen emas)
+        //  MP4: oddiy <video> tegi
         // ═══════════════════════════════════════════════════════════════
+        let ytPlayerInstance = null;
+        let ytPlayerReady = false;
+        let ytPendingVideoId = null;
+
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayerInstance = new YT.Player('ytPlayer', {
+                width: '100%',
+                height: '100%',
+                videoId: '',
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'fs': 0,
+                    'disablekb': 0,
+                    'origin': window.location.origin
+                },
+                events: {
+                    'onReady': function() {
+                        ytPlayerReady = true;
+                        if (ytPendingVideoId) {
+                            ytPlayerInstance.loadVideoById({
+                                videoId: ytPendingVideoId,
+                                startSeconds: 0
+                            });
+                            ytPendingVideoId = null;
+                        }
+                    },
+                    'onError': function(e) {
+                        console.warn('YouTube error:', e.data);
+                        const errorEl = document.getElementById('videoError');
+                        if (errorEl) errorEl.style.display = 'flex';
+                    }
+                }
+            });
+        };
+
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})/,
+                /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/,
+                /(?:youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/,
+                /(?:youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/,
+                /^([A-Za-z0-9_-]{11})$/
+            ];
+            for (const p of patterns) {
+                const m = url.match(p);
+                if (m) return m[1];
+            }
+            return null;
+        }
+
         function openVideo(url) {
             if (!url) {
                 showToast('Video manzili yo\'q', 'warning');
                 return;
             }
-
-            // YouTube havolasi bo'lsa, <video> tegi uni ijro eta olmaydi —
-            // Telegram ichida yoki tashqi brauzerda ochamiz
-            const isYouTube = /youtube\.com|youtu\.be/i.test(url);
-            if (isYouTube) {
-                const tg = window.Telegram?.WebApp;
-                if (tg && tg.openLink) {
-                    tg.openLink(url);
-                } else {
-                    window.open(url, '_blank');
-                }
-                return;
-            }
-
-            const video = document.getElementById('roomVideo');
             const errorEl = document.getElementById('videoError');
+            const ytDiv = document.getElementById('ytPlayer');
+            const video = document.getElementById('roomVideo');
             if (errorEl) errorEl.style.display = 'none';
 
-            try {
-                video.pause();
-                video.removeAttribute('src');
-                video.load();
-            } catch (e) {}
+            document.getElementById('videoModal').classList.add('show');
 
-            const modal = document.getElementById('videoModal');
-            modal.classList.add('show');
+            const ytId = extractYouTubeId(url);
 
-            video.setAttribute('preload', 'auto');
-            video.setAttribute('playsinline', '');
-            video.setAttribute('webkit-playsinline', '');
-            video.setAttribute('controls', '');
-            video.muted = true;
-            video.src = url;
-
-            video.onerror = function() {
-                console.warn('Video error:', url);
-                if (errorEl) errorEl.style.display = 'flex';
-                const tg = window.Telegram?.WebApp;
-                if (tg && tg.openLink) {
-                    tg.openLink(url);
+            if (ytId) {
+                if (video) {
+                    try { video.pause(); } catch (e) {}
+                    video.removeAttribute('src');
+                    video.style.display = 'none';
                 }
-            };
+                if (ytDiv) ytDiv.style.display = 'block';
 
-            video.onloadeddata = function() {
-                video.currentTime = 0;
-            };
+                if (ytPlayerInstance && ytPlayerReady) {
+                    ytPlayerInstance.loadVideoById({
+                        videoId: ytId,
+                        startSeconds: 0
+                    });
+                } else {
+                    ytPendingVideoId = ytId;
+                }
+            } else {
+                if (ytDiv) ytDiv.style.display = 'none';
+                if (ytPlayerInstance && ytPlayerReady) {
+                    try { ytPlayerInstance.stopVideo(); } catch (e) {}
+                }
+                if (video) {
+                    video.style.display = 'block';
+                    try {
+                        video.pause();
+                        video.removeAttribute('src');
+                        video.load();
+                    } catch (e) {}
+                    video.setAttribute('preload', 'auto');
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('webkit-playsinline', '');
+                    video.setAttribute('controls', '');
+                    video.src = url;
 
-            video.load();
+                    video.onerror = function() {
+                        console.warn('Video error:', url);
+                        if (errorEl) errorEl.style.display = 'flex';
+                    };
 
-            // MUHIM: play() endi tugma bosish bilan bir xil sinxron zanjirda —
-            // Telegram WebView bu ruxsatni onloadeddata ichida yo'qotib qo'yadi
-            const playPromise = video.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(err => {
-                    console.warn('Autoplay blocked, user must tap play:', err);
-                });
+                    video.load();
+                }
             }
         }
 
@@ -3068,10 +3145,18 @@
             const video = document.getElementById('roomVideo');
             const errorEl = document.getElementById('videoError');
             try {
-                video.pause();
-                video.removeAttribute('src');
-                video.load();
+                if (video) {
+                    video.pause();
+                    video.removeAttribute('src');
+                    video.load();
+                }
             } catch (e) {}
+            try {
+                if (ytPlayerInstance && ytPlayerReady) {
+                    ytPlayerInstance.stopVideo();
+                }
+            } catch (e) {}
+            ytPendingVideoId = null;
             if (errorEl) errorEl.style.display = 'none';
             document.getElementById('videoModal').classList.remove('show');
         }
@@ -4062,7 +4147,7 @@
         console.log('Firebase:', FB_URL);
         console.log('Bot:', BOT_TOKEN.split(':')[0]);
         console.log('All cabin data loaded from Firebase (no hardcoded rooms)');
-        console.log('VR panoramas + MP4 videos enabled for all cabins');
+        console.log('VR panoramas + YouTube/MP4 videos enabled for all cabins');
     </script>
 </body>
 </html>
